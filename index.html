@@ -35,6 +35,23 @@ src: url("fonts/UniversLTStd.woff") format("woff")
 position:absolute;bottom:10px;font-family: "Univers";font-size:12px;text-transform:uppercase;text-align:center;
 line-height:1;width:100%;padding:0 45px;
 }
+
+/* Mobile footer override */
+@media screen and (max-width: 960px) {
+  .footer {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 10px 20px !important;
+    z-index: 1000 !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+}
 body{
 overflow: auto;
 background-image: url('images/background.jpg');
@@ -221,34 +238,27 @@ img.t-logo {
 	<p class="footer">REGALITAS NEC DATUR NEC MERETUR — SED EXERCETUR.</p>
 
   <script>
-    // Twitch Live Status Check
+    // Twitch Live Status Check using Netlify Function
     function checkTwitchLiveStatus() {
-      const clientId = 'x2lu5bqhxa1jlpti7bsf4epzmbf8p1';
-      const accessToken = 'pzteptjsjtui1hi53iu3ibdkafpwtb';
-      const username = 'kayafoo';
-
-      fetch(`https://api.twitch.tv/helix/streams?user_login=${username}`, {
-        headers: {
-          'Client-ID': clientId,
-          'Authorization': `Bearer ${accessToken}`
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        const isLive = data.data && data.data.length > 0;
-        const img = document.getElementById('twitch-status');
-        if (img) {
-          img.src = isLive ? 'images/Live On Twitch (Red).png' : 'images/Live On Twitch (Grey).png';
-        }
-      })
-      .catch(err => {
-        console.error('Twitch API Error:', err);
-        // Fallback to grey image on error
-        const img = document.getElementById('twitch-status');
-        if (img) {
-          img.src = 'images/Live On Twitch (Grey).png';
-        }
-      });
+      // Get the current site URL to call the Netlify function
+      const siteUrl = window.location.origin;
+      
+      fetch(`${siteUrl}/.netlify/functions/twitch-status`)
+        .then(response => response.json())
+        .then(data => {
+          const img = document.getElementById('twitch-status');
+          if (img) {
+            img.src = data.isLive ? 'images/Live On Twitch (Red).png' : 'images/Live On Twitch (Grey).png';
+          }
+        })
+        .catch(err => {
+          console.error('Twitch Status Check Error:', err);
+          // Fallback to grey image on error
+          const img = document.getElementById('twitch-status');
+          if (img) {
+            img.src = 'images/Live On Twitch (Grey).png';
+          }
+        });
     }
 
     // Check Twitch status on page load

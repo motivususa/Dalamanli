@@ -1,0 +1,9 @@
+{
+  "name": "twitch-status-function",
+  "version": "1.0.0",
+  "description": "Netlify function to check Twitch live status",
+  "main": "twitch-status.js",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
