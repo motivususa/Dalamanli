@@ -295,18 +295,17 @@ img.velotemp {
     .desktop{display: none;}
 	.mobile{display: block;}
     
-    /* Mobile now matches desktop styling */
+    /* Revert to original temp.studio mobile styling */
     body {
-        font-size: 8vw;
-        overflow: auto;
-        height: auto;
+        font-size: 12.5vw;
+        overflow: hidden;
+        height: inherit;
     }
     
     #selector {
-        padding: 0 20px;
-        width: calc(100% - 40px);
-        max-width: 600px;
-        margin: 20px auto;
+        padding: 0 10px;
+        width: 100%;
+        margin-top: 10px;
     }
     
     #selector .main-selector .main-option {
@@ -315,11 +314,11 @@ img.velotemp {
     }
     
     #selector .secondary-selector .option {
-        margin: 5px 0;
-        line-height: 1.2em;
-        border-radius: 1.2em;
+        margin: 10px 0;
+        line-height: 1.1em;
+        border-radius: 5vw;
         padding-left: 1.5vw;
-        font-size: 4vw;
+        font-size: 6vw;
     }
 
     /******************************/
