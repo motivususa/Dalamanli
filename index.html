@@ -119,6 +119,100 @@ body:not(:hover)::-webkit-scrollbar-thumb {
 #selector .secondary-selector.liquid-glass .option {
   color: white !important;
 }
+
+/* Mobile and responsive fixes */
+@media screen and (max-width: 768px) {
+  /* Issue 1: Add horizontal padding to dropdown */
+  #selector {
+    width: calc(100vw - 40px);
+    max-width: 400px;
+    padding: 0 20px;
+  }
+  
+  /* Issue 2: Fix visual seam by ensuring proper border radius */
+  #selector .main-selector.liquid-glass,
+  #selector .secondary-selector.liquid-glass {
+    border-radius: 20px !important;
+    overflow: hidden !important;
+  }
+  
+  /* Issue 4: Reduce text size on mobile */
+  #selector .main-selector .main-option {
+    font-size: 16px !important;
+    line-height: 1.2 !important;
+  }
+  
+  #selector .secondary-selector .option {
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+    padding: 12px 16px !important;
+  }
+  
+  /* Issue 5: Add scroll support for dropdown */
+  #selector .secondary-selector {
+    max-height: 60vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  }
+  
+  #selector .secondary-selector::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  #selector .secondary-selector::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  #selector .secondary-selector::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+  }
+  
+  /* Position content lower on mobile */
+  #selector {
+    top: 60% !important;
+  }
+}
+
+/* Issue 3: Ensure background covers entire viewport */
+body {
+  min-height: 100vh;
+  min-width: 100vw;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+/* Additional mobile optimizations */
+@media screen and (max-width: 480px) {
+  #selector {
+    width: calc(100vw - 20px);
+    padding: 0 10px;
+  }
+  
+  #selector .main-selector .main-option {
+    font-size: 14px !important;
+  }
+  
+  #selector .secondary-selector .option {
+    font-size: 13px !important;
+    padding: 10px 14px !important;
+  }
+}
+
+/* T$ logo sizing */
+img.t-logo {
+  height: 5.5vw;
+}
+
+/* Twitch status image styling */
+.twitch-status-img {
+  height: 5.5vw;
+  width: auto;
+  transition: all 0.3s ease;
+}
   </style>
 
 
@@ -212,20 +306,24 @@ body:not(:hover)::-webkit-scrollbar-thumb {
     
     <div id="selector">
 <!--        <div class="main-selector clearafter" onclick="$('.secondary-selector').toggle();"><div class="main-option">Kaya Dalamanli</div><div class="arrows"><img src="assets/images/up-arrow.svg"><img src="assets/images/down-arrow.svg"></div></div>-->
-        <div class="main-selector clearafter liquid-glass" onclick="$('.secondary-selector').toggle();"><div class="main-option">Kaya D Wesley</div><div class="arrows"><section class="stage">
+        <div class="main-selector clearafter liquid-glass" onclick="$('.secondary-selector').toggle();"><div class="main-option">TAP HERE</div><div class="arrows"><section class="stage">
   <figure class="ball"><img src="images/up-arrow.svg"><img src="images/down-arrow.svg"></figure>
 </section>
 </div></div>
         <div class="secondary-selector liquid-glass">
-            <div class="option"><a href="mailto:kayawesleybusiness@gmail.com">Contact me</a></div>
+            <div class="option"><a href="mailto:kayawesleybusiness@gmail.com">Contact Me</a></div>
+            <div class="option"><a id="twitch-link" href="https://www.twitch.tv/kayafoo" target="_blank"><img id="twitch-status" src="images/Live On Twitch (Grey).png" alt="Twitch Live Status" class="twitch-status-img" /></a></div>
             <div class="option"><a href="https://instagram.com/kayadalamanli/" target="_blank">Instagram</a></div>
-            <div class="option"><a href="https://twitter.com/kayadalamanli" target="_blank">Twitter</a></div>
-            <div class="option"><a href="https://music.apple.com/profile/kayadalamanli" target="_blank">Apple Music</a></div>
             <div class="option"><a href="https://tiktok.com/@kayadalamanli" target="_blank">TikTok</a></div>
+            <div class="option"><a href="https://twitter.com/kayadalamanli" target="_blank">Twitter</a></div>
             <div class="option"><a href="https://youtube.com/@kayadalamanli" target="_blank">YouTube</a></div>
-            <div class="option"><a href="https://discordapp.com/users/1030656876876156984" target="_blank">Discord</a></div>
+            <div class="option"><a href="https://music.apple.com/profile/kayadalamanli" target="_blank">Apple Music</a></div>
+            <div class="option"><a href="https://discord.gg/UKBQRp73gK" target="_blank">Discord</a></div>
+            <div class="option"><a href="https://boxd.it/5mNsX" target="_blank">Letterboxd</a></div>
             <div class="option"><a href="https://opaius.com" target="_blank">Opaius</a></div>
-            <div class="option"><a href="https://trendsetters.me" target="_blank"><img class="t$logo" src="images/t$ logo.png"></a></div>
+            <div class="option"><a href="https://trendsetters.me" target="_blank"><img class="t-logo" src="images/t$ logo.png"></a></div>
+            <div class="option"><a href="https://a.co/d/4UPegIl" target="_blank"><img class="captain-cypher-logo" src="images/Captain Cypher Logo (Digital Book).png"></a></div>
+            <div class="option"><a href="https://www.barnesandnoble.com/w/captain-cypher-kaya-wesley/1143934342?fbclid=PAQ0xDSwMA5FNleHRuA2FlbQIxMQABp6supClvYKDS-El8g1NCz2Uw6ZKnlZJtw9VmOfHqzCrGAwKWd3WM_g0fL-4W_aem_ssvQnPJjLbf7AGdofOQ3ng" target="_blank"><img class="captain-cypher-logo" src="images/Captain Cypher Logo (Physical Book).png"></a></div>
 <!--            <div class="option"><a href="mailto:kayawesleybusiness@gmail.com?subject=Portfolio Request">Request</a></div>-->
 <!--            <div class="option"><a href="mailto:kayawesleybusiness@gmail.com?subject=I want to work with Kaya">Collab?</a></div>-->
         </div>
@@ -254,7 +352,39 @@ body:not(:hover)::-webkit-scrollbar-thumb {
 	
 	<p class="footer">REGALITAS NEC DATUR NEC MERETUR — SED EXERCETUR.</p>
 
+  <script>
+    // Twitch Live Status Check
+    function checkTwitchLiveStatus() {
+      const clientId = 'x2lu5bqhxa1jlpti7bsf4epzmbf8p1';
+      const accessToken = 'pzteptjsjtui1hi53iu3ibdkafpwtb';
+      const username = 'kayafoo';
 
+      fetch(`https://api.twitch.tv/helix/streams?user_login=${username}`, {
+        headers: {
+          'Client-ID': clientId,
+          'Authorization': `Bearer ${accessToken}`
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        const isLive = data.data && data.data.length > 0;
+        const img = document.getElementById('twitch-status');
+        if (img) {
+          img.src = isLive ? 'images/Live On Twitch (Red).png' : 'images/Live On Twitch (Grey).png';
+        }
+      })
+      .catch(err => {
+        console.error('Twitch API Error:', err);
+        // Fallback to grey image on error
+        const img = document.getElementById('twitch-status');
+        if (img) {
+          img.src = 'images/Live On Twitch (Grey).png';
+        }
+      });
+    }
 
+    // Check Twitch status on page load
+    checkTwitchLiveStatus();
+  </script>
 
 </body></html>
