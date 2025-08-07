@@ -2,15 +2,7 @@
 Theme: Circa.art
 */
 
-/*
-@font-face {
-    font-family: 'NewRailAlphabetMedium';
-	src: url('../assets/fonts/NewRailAlphabetMedium.eot');
-	src: local('☺'), url('../assets/fonts/NewRailAlphabetMedium.woff') format('woff'), url('../assets/fonts/NewRailAlphabetMedium.ttf') format('truetype'), url('../assets/fonts/NewRailAlphabetMedium.svg') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
-*/
+
 
 @font-face {
     font-family: 'HelveticaNeue-CondensedBold';
@@ -61,11 +53,9 @@ textarea:-moz-placeholder { color:#a9a9a9; }
     clear: both;
 }
 
-.text-right { text-align: right; }
 
-:root {
-    --color-blue: #144bd0;
-}
+
+
 
 
 
@@ -93,13 +83,7 @@ body {
     top: calc(50vh - 5vw);
 }
 
-#selector ul li {
-    cursor: pointer;
-}
 
-#selector .sub-menu {
-    display: none;
-}
 
 
 select {
@@ -109,9 +93,7 @@ select {
 }
 
 
-#selector {
-    
-}
+/* Removed empty ruleset */
 #selector .main-selector {
     border: 1px solid #c2c2c2;
     border-radius: 1.2em;
@@ -173,18 +155,12 @@ select {
 
 
 
-img.velotemp {
+img.t-logo {
     height: 7vw;
 }
 
 
-#map {
-    position: fixed;
-    z-index: -1;
-/*    z-index: 0;*/
-    width: 100vw;
-    height: 100vh;
-}
+
 
 
 
@@ -210,6 +186,7 @@ img.velotemp {
   border-radius: 50%;
   background: radial-gradient(circle at 50% 0px, #ffffff, rgba(255, 255, 255, 0) 58%);
   -webkit-filter: blur(5px);
+  filter: blur(5px);
   z-index: 2;
 }
 
@@ -236,70 +213,21 @@ img.velotemp {
 
 
 
-.col-md-1{
-    width: 8.33%;
-    float: left;
-}
-.col-md-2{
-    width: 16.66%;
-    float: left;
-}
-.col-md-3{
-    width: 25%;
-    float: left;
-}
-.col-md-4{
-    width: 33.33%;
-    float: left;
-}
-.col-md-5{
-    width: 41.66%;
-    float: left;
-}
-.col-md-6{
-    width: 50%;
-    float: left;
-}
-.col-md-7{
-    width: 58.33%;
-    float: left;
-}
-.col-md-8{
-    width: 66.66%;
-    float: left;
-}
-.col-md-9{
-    width: 75%;
-    float: left;
-}
-.col-md-10{
-    width: 83.33%;
-    float: left;
-}
-.col-md-11{
-    width: 91.66%;
-    float: left;
-}
-.col-md-12{
-    width: 100%;
-    float: left;
-}
 
-.mobile{display: none;}
 
 
 
 
 @media screen and (max-width: 960px) {
     
-    .desktop{display: none;}
-	.mobile{display: block;}
+
     
-    /* Match original temp.studio mobile styling exactly */
+
     body {
         font-size: 12.5vw;
         overflow: hidden;
         height: inherit;
+        padding-bottom: 80px; /* Add padding to accommodate footer */
     }
     
     #selector .secondary-selector .option {
@@ -310,33 +238,28 @@ img.velotemp {
     
     /* Fix footer positioning on mobile */
     .footer {
-        position: absolute;
-        bottom: 10px;
+        position: fixed;
+        bottom: 0;
         left: 0;
         right: 0;
         width: 100%;
         text-align: center;
-        padding: 0 20px;
+        padding: 10px 20px;
         z-index: 1000;
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
     
     /* Make PNG images bigger on mobile */
-    img.velotemp,
+    img.t-logo,
     .twitch-status-img,
     img.captain-cypher-logo {
         height: 10vw !important;
         width: auto;
     }
 
-    /******************************/
-    .col-sm-50{
-        width: 50%;
-        float: left;
-    }
-    .col-sm-100{
-        width: 100%;
-        float: left;
-    }
+
         
 } 
 
