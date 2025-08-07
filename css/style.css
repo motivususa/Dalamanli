@@ -295,20 +295,32 @@ img.velotemp {
     .desktop{display: none;}
 	.mobile{display: block;}
     
+    /* Mobile now matches desktop styling */
     body {
-        font-size: 12.5vw;
-        overflow: hidden;
-        height: inherit;
+        font-size: 8vw;
+        overflow: auto;
+        height: auto;
     }
     
+    #selector {
+        padding: 0 20px;
+        width: calc(100% - 40px);
+        max-width: 600px;
+        margin: 20px auto;
+    }
+    
+    #selector .main-selector .main-option {
+        font-size: 6vw;
+        padding-left: 1.5vw;
+    }
     
     #selector .secondary-selector .option {
-        margin: 10px 0;
-        line-height: 1.1em;
-        border-radius: 5vw;
+        margin: 5px 0;
+        line-height: 1.2em;
+        border-radius: 1.2em;
+        padding-left: 1.5vw;
+        font-size: 4vw;
     }
-
-
 
     /******************************/
     .col-sm-50{
