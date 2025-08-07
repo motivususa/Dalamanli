@@ -174,7 +174,7 @@ select {
 
 
 img.velotemp {
-    height: 5.5vw;
+    height: 7vw;
 }
 
 
@@ -310,18 +310,21 @@ img.velotemp {
     
     /* Fix footer positioning on mobile */
     .footer {
-        position: fixed;
+        position: absolute;
         bottom: 10px;
+        left: 0;
+        right: 0;
         width: 100%;
         text-align: center;
         padding: 0 20px;
+        z-index: 1000;
     }
     
     /* Make PNG images bigger on mobile */
     img.velotemp,
     .twitch-status-img,
     img.captain-cypher-logo {
-        height: 8vw !important;
+        height: 10vw !important;
         width: auto;
     }
 
