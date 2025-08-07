@@ -100,6 +100,17 @@ body::after {
   background-repeat: no-repeat;
 }
 
+/* Mobile-specific dark border color */
+@media screen and (max-width: 960px) {
+  body::after {
+    background-color: #232323;
+    background-image: url('images/background.jpg');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+}
+
 body {
   overflow: auto;
   background: transparent;
@@ -118,6 +129,8 @@ body {
     overflow-x: hidden !important;
     overscroll-behavior-y: none !important;
     -webkit-overflow-scrolling: touch !important;
+    /* Set dark background color as fallback */
+    background-color: #232323 !important;
   }
   
   /* Enhanced pseudo-element for mobile with dynamic viewport height */
@@ -132,6 +145,8 @@ body {
     padding-bottom: calc(60px + env(safe-area-inset-bottom, 0)) !important;
     padding-left: env(safe-area-inset-left, 0) !important;
     padding-right: env(safe-area-inset-right, 0) !important;
+    /* Ensure body also has dark background */
+    background-color: #232323 !important;
   }
 }
 
