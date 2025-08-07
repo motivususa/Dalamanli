@@ -164,11 +164,9 @@ select {
     border-radius: 1.2em;
 }
 #selector .secondary-selector .option:hover {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    background-color: #dedede;
+    background: linear-gradient(0deg, rgb(177, 177, 177) 0%, rgb(249 249 249) 100%);
+    box-shadow: 0px 0px 15px #000000a1;
 }
 
 
@@ -295,30 +293,17 @@ img.velotemp {
     .desktop{display: none;}
 	.mobile{display: block;}
     
-    /* Revert to original temp.studio mobile styling */
+    /* Match original temp.studio mobile styling exactly */
     body {
         font-size: 12.5vw;
         overflow: hidden;
         height: inherit;
     }
     
-    #selector {
-        padding: 0 10px;
-        width: 100%;
-        margin-top: 10px;
-    }
-    
-    #selector .main-selector .main-option {
-        font-size: 6vw;
-        padding-left: 1.5vw;
-    }
-    
     #selector .secondary-selector .option {
         margin: 10px 0;
         line-height: 1.1em;
         border-radius: 5vw;
-        padding-left: 1.5vw;
-        font-size: 6vw;
     }
 
     /******************************/
