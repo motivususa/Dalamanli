@@ -177,77 +177,13 @@ img.t-logo {
             
         })
         
-        function openMenu(){
-            $('#selector').toggleClass('opened');
-            $('#selector .sub-menu').toggle();
-        }
+
 
     </script>
     
     
     
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1O9aP_K1ipsyOzLXEl-40S4zyGUuK1p4&callback&sensor=false"></script>
-        
-<!--
-        <script type="text/javascript">
-            // When the window has finished loading create our google map below
-            google.maps.event.addDomListener(window, 'load', init);
-        
-            function init() {
-                // Basic options for a simple Google Map
-                // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
-                var mapOptions = {
-                    // How zoomed in you want the map to start at (always required)
-                    zoom: 3,
-                    mapTypeControl: false,
-                    streetViewControl: false,
-                    rotateControl: false,
-                    disableDefaultUI: true,
 
-                    // The latitude and longitude to center the map (always required)
-                    center: new google.maps.LatLng(38.0056133, 9.67521),
-
-                    // How you would like to style the map. 
-                    // This is where you would paste any style found on Snazzy Maps.
-//                    styles: [ { "featureType": "all", "elementType": "labels", "stylers": [ { "visibility": "off" } ] }, { "featureType": "all", "elementType": "labels.text", "stylers": [ { "visibility": "off" } ] }, { "featureType": "all", "elementType": "labels.text.fill", "stylers": [ { "saturation": 36 }, { "color": "#000000" }, { "lightness": 40 }, { "visibility": "off" } ] }, { "featureType": "all", "elementType": "labels.text.stroke", "stylers": [ { "visibility": "off" }, { "color": "#000000" }, { "lightness": 16 } ] }, { "featureType": "all", "elementType": "labels.icon", "stylers": [ { "visibility": "off" } ] }, { "featureType": "administrative", "elementType": "geometry.fill", "stylers": [ { "color": "#000000" }, { "lightness": 20 } ] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [ { "color": "#000000" }, { "lightness": 17 }, { "weight": 1.2 } ] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [ { "color": "#000000" }, { "lightness": 20 } ] }, { "featureType": "landscape.man_made", "elementType": "geometry.fill", "stylers": [ { "color": "#ff0000" } ] }, { "featureType": "landscape.natural", "elementType": "geometry.fill", "stylers": [ { "color": "#000000" } ] }, { "featureType": "poi", "elementType": "geometry", "stylers": [ { "color": "#000000" }, { "lightness": 21 } ] }, { "featureType": "poi", "elementType": "geometry.fill", "stylers": [ { "color": "#ff0000" } ] }, { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [ { "color": "#00ff00" }, { "lightness": 17 } ] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [ { "color": "#000000" }, { "lightness": 29 }, { "weight": 0.2 } ] }, { "featureType": "road.highway", "elementType": "labels", "stylers": [ { "visibility": "off" } ] }, { "featureType": "road.arterial", "elementType": "geometry", "stylers": [ { "color": "#000000" }, { "lightness": 18 } ] }, { "featureType": "road.arterial", "elementType": "geometry.fill", "stylers": [ { "color": "#00ff00" } ] }, { "featureType": "road.local", "elementType": "geometry", "stylers": [ { "color": "#000000" }, { "lightness": 16 } ] }, { "featureType": "road.local", "elementType": "geometry.fill", "stylers": [ { "visibility": "on" }, { "color": "#00ff00" } ] }, { "featureType": "transit", "elementType": "geometry", "stylers": [ { "color": "#000000" }, { "lightness": 19 } ] }, { "featureType": "transit.line", "elementType": "geometry.fill", "stylers": [ { "color": "#ff0000" } ] }, { "featureType": "transit.station.rail", "elementType": "geometry.fill", "stylers": [ { "color": "#000000" } ] }, { "featureType": "water", "elementType": "geometry", "stylers": [ { "color": "#00b5ff" }, { "lightness": 17 } ] }, { "featureType": "water", "elementType": "geometry.fill", "stylers": [ { "color": "#0000ff" } ] } ]
-                };
-
-                // Get the HTML DOM element that will contain your map 
-                // We are using a div with id="map" seen below in the <body>
-                var mapElement = document.getElementById('map');
-
-                // Create the Google Map using our element and options defined above
-                var map = new google.maps.Map(mapElement, mapOptions);
-
-                // Let's also add a marker while we're at it
-//                var marker = new google.maps.Marker({
-//                    position: new google.maps.LatLng(51.5099695, -0.1371599),
-//                    map: map,
-//                    title: 'c.20:20'
-//                });
-                
-                var markerOptions = {
-                    map: map,
-                    position: {
-                        lat: 45.7056133,
-                        lng: 9.67521,
-                    }
-                };
-
-                markerOptions.icon = {
-                    path: 'M11 2c-3.9 0-7 3.1-7 7 0 5.3 7 13 7 13 0 0 7-7.7 7-13 0-3.9-3.1-7-7-7Zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5 0-1.4 1.1-2.5 2.5-2.5 1.4 0 2.5 1.1 2.5 2.5 0 1.4-1.1 2.5-2.5 2.5Z',
-                    scale: 1.5,
-                    anchor: new google.maps.Point(10, 15),
-                    fillOpacity: 1,
-                    fillColor: '#000000',
-                    strokeOpacity: 0
-                };
-
-                var marker = new google.maps.Marker(markerOptions);
-                
-            }
-        </script>
--->
     
     
     
@@ -255,7 +191,7 @@ img.t-logo {
     
     
     <div id="selector">
-<!--        <div class="main-selector clearafter" onclick="$('.secondary-selector').toggle();"><div class="main-option">Kaya Dalamanli</div><div class="arrows"><img src="assets/images/up-arrow.svg"><img src="assets/images/down-arrow.svg"></div></div>-->
+
         <div class="main-selector clearafter liquid-glass" onclick="$('.secondary-selector').toggle();"><div class="main-option">TAP HERE</div><div class="arrows"><section class="stage">
   <figure class="ball"><img src="images/up-arrow.svg"><img src="images/down-arrow.svg"></figure>
 </section>
@@ -274,31 +210,13 @@ img.t-logo {
             <div class="option"><a href="https://trendsetters.me" target="_blank"><img class="t-logo" src="images/t$ logo.png"></a></div>
             <div class="option"><a href="https://a.co/d/4UPegIl" target="_blank"><img class="captain-cypher-logo" src="images/Captain Cypher Logo (Digital Book).png"></a></div>
             <div class="option"><a href="https://www.barnesandnoble.com/w/captain-cypher-kaya-wesley/1143934342?fbclid=PAQ0xDSwMA5FNleHRuA2FlbQIxMQABp6supClvYKDS-El8g1NCz2Uw6ZKnlZJtw9VmOfHqzCrGAwKWd3WM_g0fL-4W_aem_ssvQnPJjLbf7AGdofOQ3ng" target="_blank"><img class="captain-cypher-logo" src="images/Captain Cypher Logo (Physical Book).png"></a></div>
-<!--            <div class="option"><a href="mailto:kayawesleybusiness@gmail.com?subject=Portfolio Request">Request</a></div>-->
-<!--            <div class="option"><a href="mailto:kayawesleybusiness@gmail.com?subject=I want to work with Kaya">Collab?</a></div>-->
+
         </div>
-<!--
 
-
-<li><a href="mailto:kayawesleybusiness@gmail.com">Contact us</a></li>
-                    <li><a href="https://www.instagram.com/kayadalamanli/" target="_blank">Instagram</a></li>
-                    <li><a href="mailto:kayawesleybusiness@gmail.com?subject=Portfolio Request">Portfolio Request</a></li>
-                    <li><a href="mailto:kayawesleybusiness@gmail.com?subject=Want to work with Kaya">Collab?</a></li>
-
-
-
-        <select>
-            <option>Kaya Dalamanli</option>
-            <option>Contact us</option>
-            <option>Instagram</option>
-            <option>Request</option>
-            <option>Collab?</option>
-        </select>
--->
     </div>
     
     
-     <div id="map"></div>
+
 	
 	<p class="footer">REGALITAS NEC DATUR NEC MERETUR — SED EXERCETUR.</p>
 
