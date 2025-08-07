@@ -138,60 +138,7 @@ body {
   color: white !important;
 }
 
-/* Mobile and responsive fixes */
-@media screen and (max-width: 768px) {
-  /* Issue 1: Add horizontal padding to dropdown */
-  #selector {
-    width: calc(100vw - 40px);
-    max-width: 400px;
-    padding: 0 20px;
-  }
-  
-  /* Issue 2: Fix visual seam by ensuring proper border radius */
-  #selector .main-selector.liquid-glass,
-  #selector .secondary-selector.liquid-glass {
-    border-radius: 20px !important;
-    overflow: hidden !important;
-  }
-  
-  /* Issue 4: Reduce text size on mobile */
-  #selector .main-selector .main-option {
-    font-size: 16px !important;
-    line-height: 1.2 !important;
-  }
-  
-  #selector .secondary-selector .option {
-    font-size: 14px !important;
-    line-height: 1.3 !important;
-    padding: 12px 16px !important;
-  }
-  
-  /* Issue 5: Add scroll support for dropdown */
-  #selector .secondary-selector {
-    max-height: 60vh;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-  }
-  
-  #selector .secondary-selector::-webkit-scrollbar {
-    width: 4px;
-  }
-  
-  #selector .secondary-selector::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  #selector .secondary-selector::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-  }
-  
-  /* Position content lower on mobile */
-  #selector {
-    top: 60% !important;
-  }
-}
+
 
 /* Issue 3: Ensure background covers entire viewport */
 body {
