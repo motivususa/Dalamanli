@@ -47,9 +47,22 @@ line-height:1;width:100%;padding:0 45px;
     text-align: center !important;
     padding: 10px 20px !important;
     z-index: 1000 !important;
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
+  }
+  
+  /* Make mobile page taller to push footer to bottom */
+  body {
+    min-height: 100vh !important;
+    min-height: 100dvh !important; /* Dynamic viewport height for mobile */
+    padding-bottom: 60px !important; /* Space for footer */
+  }
+  
+  /* Ensure content area is tall enough */
+  #selector {
+    min-height: calc(100vh - 60px) !important;
+    min-height: calc(100dvh - 60px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
   }
 }
 body{
