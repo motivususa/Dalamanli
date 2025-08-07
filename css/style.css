@@ -164,9 +164,11 @@ select {
     border-radius: 1.2em;
 }
 #selector .secondary-selector .option:hover {
-    background-color: #dedede;
-    background: linear-gradient(0deg, rgb(177, 177, 177) 0%, rgb(249 249 249) 100%);
-    box-shadow: 0px 0px 15px #000000a1;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 
@@ -304,6 +306,23 @@ img.velotemp {
         margin: 10px 0;
         line-height: 1.1em;
         border-radius: 5vw;
+    }
+    
+    /* Fix footer positioning on mobile */
+    .footer {
+        position: fixed;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
+        padding: 0 20px;
+    }
+    
+    /* Make PNG images bigger on mobile */
+    img.velotemp,
+    .twitch-status-img,
+    img.captain-cypher-logo {
+        height: 8vw !important;
+        width: auto;
     }
 
     /******************************/
