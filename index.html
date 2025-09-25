@@ -47,6 +47,9 @@ body.menu-open .footer {
   right: auto !important;
 }
 
+/* Utility to fully hide the footer when menu is open (mobile/desktop) */
+.hidden-footer { display: none !important; }
+
 /* Mobile footer override */
 @media screen and (max-width: 960px) {
   .footer {
@@ -311,7 +314,7 @@ img.t-logo {
     
     <div id="selector">
 
-        <div class="main-selector clearafter liquid-glass" onclick="$('.secondary-selector').toggle(); $('body').toggleClass('menu-open');"><div class="main-option">TAP HERE</div><div class="arrows"><section class="stage">
+        <div class="main-selector clearafter liquid-glass" onclick="$('.secondary-selector').toggle(); if ($('.secondary-selector').is(':visible')) { $('body').addClass('menu-open'); $('.footer').addClass('hidden-footer'); } else { $('body').removeClass('menu-open'); $('.footer').removeClass('hidden-footer'); }"><div class="main-option">TAP HERE</div><div class="arrows"><section class="stage">
   <figure class="ball"><img src="images/up-arrow.svg"><img src="images/down-arrow.svg"></figure>
 </section>
 </div></div>
