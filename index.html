@@ -49,6 +49,18 @@ line-height:1;width:100%;padding:0 45px;
     z-index: 1000 !important;
   }
   
+    /* When menu is open, let footer participate in layout so it moves with content */
+    body.menu-open {
+      padding-bottom: 10px !important;
+    }
+    body.menu-open .footer {
+      position: static !important;
+      bottom: auto !important;
+      left: auto !important;
+      right: auto !important;
+      z-index: auto !important;
+    }
+    
   /* Make mobile page taller to push footer to bottom */
   body {
     min-height: 100vh !important;
@@ -288,7 +300,7 @@ img.t-logo {
     
     <div id="selector">
 
-        <div class="main-selector clearafter liquid-glass" onclick="$('.secondary-selector').toggle();"><div class="main-option">TAP HERE</div><div class="arrows"><section class="stage">
+        <div class="main-selector clearafter liquid-glass" onclick="$('.secondary-selector').toggle(); $('body').toggleClass('menu-open');"><div class="main-option">TAP HERE</div><div class="arrows"><section class="stage">
   <figure class="ball"><img src="images/up-arrow.svg"><img src="images/down-arrow.svg"></figure>
 </section>
 </div></div>
