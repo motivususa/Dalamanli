@@ -36,6 +36,17 @@ position:absolute;bottom:10px;font-family: "Univers";font-size:12px;text-transfo
 line-height:1;width:100%;padding:0 45px;
 }
 
+/* When dropdown is open, let footer flow with content on all viewports */
+body.menu-open {
+  padding-bottom: 80px !important;
+}
+body.menu-open .footer {
+  position: static !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+}
+
 /* Mobile footer override */
 @media screen and (max-width: 960px) {
   .footer {
