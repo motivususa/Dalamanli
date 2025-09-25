@@ -58,6 +58,11 @@ body.menu-open .footer {
   border: 0 !important;
 }
 
+/* Symmetric padding for the dropdown and remove extra outer gaps */
+#selector .secondary-selector { padding: 10px 0 !important; }
+#selector .secondary-selector .option:first-child { margin-top: 0 !important; }
+#selector .secondary-selector .option:last-child { margin-bottom: 0 !important; }
+
 /* Mobile footer override */
 @media screen and (max-width: 960px) {
   .footer {
