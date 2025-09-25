@@ -54,7 +54,7 @@ body.menu-open .footer {
   width: 100%;
   box-sizing: border-box;
   margin: 0 !important;
-  border-radius: 0 !important;
+  border-radius: 1.2em !important;
 }
 
 #selector .secondary-selector .option:hover {
@@ -65,9 +65,6 @@ body.menu-open .footer {
 #selector .secondary-selector { padding: 0 !important; }
 #selector .secondary-selector .option:first-child { margin-top: 0 !important; }
 #selector .secondary-selector .option:last-child { margin-bottom: 0 !important; }
-/* Preserve rounded corners only on the first/last option to match container */
-#selector .secondary-selector .option:first-child { border-top-left-radius: 0.6em !important; border-top-right-radius: 0.6em !important; }
-#selector .secondary-selector .option:last-child { border-bottom-left-radius: 0.6em !important; border-bottom-right-radius: 0.6em !important; }
 
 /* Mobile footer override */
 @media screen and (max-width: 960px) {
