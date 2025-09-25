@@ -53,16 +53,21 @@ body.menu-open .footer {
   padding: 0 1.5vw; 
   width: 100%;
   box-sizing: border-box;
+  margin: 0 !important;
+  border-radius: 0 !important;
 }
 
 #selector .secondary-selector .option:hover {
   border: 0 !important;
 }
 
-/* Symmetric padding for the dropdown and remove extra outer gaps */
-#selector .secondary-selector { padding: 10px 0 !important; }
+/* Remove outer gaps so options touch container edges */
+#selector .secondary-selector { padding: 0 !important; }
 #selector .secondary-selector .option:first-child { margin-top: 0 !important; }
 #selector .secondary-selector .option:last-child { margin-bottom: 0 !important; }
+/* Preserve rounded corners only on the first/last option to match container */
+#selector .secondary-selector .option:first-child { border-top-left-radius: 0.6em !important; border-top-right-radius: 0.6em !important; }
+#selector .secondary-selector .option:last-child { border-bottom-left-radius: 0.6em !important; border-bottom-right-radius: 0.6em !important; }
 
 /* Mobile footer override */
 @media screen and (max-width: 960px) {
@@ -333,7 +338,7 @@ img.t-logo {
 </section>
 </div></div>
         <div class="secondary-selector liquid-glass">
-            <div class="option"><a href="mailto:hello@dalamanli.com">Contact Me</a></div>
+            <div class="option"><a href="mailto:hello@dalamanli.com" target="_self">Contact Me</a></div>
             <div class="option"><a id="twitch-link" href="https://www.twitch.tv/kayafoo" target="_blank"><img id="twitch-status" src="images/Live On Twitch (Grey).png" alt="Twitch Live Status" class="twitch-status-img" /></a></div>
             <div class="option"><a href="https://instagram.com/kayadalamanli/" target="_blank">Instagram</a></div>
             <div class="option"><a href="https://tiktok.com/@kayadalamanli" target="_blank">TikTok</a></div>
