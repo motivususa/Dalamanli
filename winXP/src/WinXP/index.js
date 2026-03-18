@@ -15,10 +15,14 @@ import {
   END_SELECT,
   POWER_OFF,
   CANCEL_POWER_OFF,
+  SHUTDOWN_START,
+  SHUTDOWN_VIDEO_END,
+  WAKE_UP,
 } from './constants/actions';
 import { FOCUSING, POWER_STATE } from './constants';
 import { defaultIconState, defaultAppState, appSettings } from './apps';
 import Modal from './Modal';
+import ShutdownOverlay from './ShutdownOverlay';
 import Footer from './Footer';
 import Windows from './Windows';
 import Icons from './Icons';
@@ -32,6 +36,7 @@ const initState = {
   icons: defaultIconState,
   selecting: false,
   powerState: POWER_STATE.START,
+  computerOff: false, // false | 'video' | 'black'
 };
 const reducer = (state, action = { type: '' }) => {
   switch (action.type) {
@@ -169,6 +174,22 @@ const reducer = (state, action = { type: '' }) => {
         ...state,
         powerState: POWER_STATE.START,
       };
+    case SHUTDOWN_START:
+      return {
+        ...state,
+        powerState: POWER_STATE.START,
+        computerOff: 'video',
+      };
+    case SHUTDOWN_VIDEO_END:
+      return {
+        ...state,
+        computerOff: 'black',
+      };
+    case WAKE_UP:
+      return {
+        ...state,
+        computerOff: false,
+      };
     default:
       return state;
   }
@@ -244,6 +265,8 @@ function WinXP() {
       dispatch({ type: ADD_APP, payload: appSettings.Winamp });
     else if (o === 'Paint')
       dispatch({ type: ADD_APP, payload: appSettings.Paint });
+    else if (o === 'AIM')
+      dispatch({ type: ADD_APP, payload: appSettings.AIM });
     else if (o === 'Log Off')
       dispatch({ type: POWER_OFF, payload: POWER_STATE.LOG_OFF });
     else if (o === 'Turn Off Computer')
@@ -273,16 +296,41 @@ function WinXP() {
     },
     [dispatch],
   );
-  function onClickModalButton(text) {
+  function pauseAllSiteAudio() {
+    document.querySelectorAll('audio, video').forEach(el => el.pause());
+    window.dispatchEvent(new CustomEvent('winxp-shutdown'));
+  }
+  async function onClickModalButton(text) {
+    if (text === 'Turn Off') {
+      pauseAllSiteAudio();
+      dispatch({ type: SHUTDOWN_START });
+      return;
+    }
+    if (text === 'Log Off') {
+      try {
+        const { signOut } = await import('firebase/auth');
+        const { auth } = await import('./apps/AIM/firebase');
+        await signOut(auth);
+      } catch (e) {
+        console.warn('Log off:', e);
+      }
+      dispatch({ type: CANCEL_POWER_OFF });
+      return;
+    }
     dispatch({ type: CANCEL_POWER_OFF });
     dispatch({
       type: ADD_APP,
-      payload: appSettings.Error,
+      payload: {
+        ...appSettings.Error,
+        injectProps: { message: 'C:\\\nApplication not found' },
+      },
     });
   }
   function onModalClose() {
     dispatch({ type: CANCEL_POWER_OFF });
   }
+  const showDesktop = !state.computerOff;
+
   return (
     <Container
       ref={ref}
@@ -290,37 +338,53 @@ function WinXP() {
       onMouseDown={onMouseDownDesktop}
       state={state.powerState}
     >
-      <Icons
-        icons={state.icons}
-        onMouseDown={onMouseDownIcon}
-        onDoubleClick={onDoubleClickIcon}
-        displayFocus={state.focusing === FOCUSING.ICON}
-        appSettings={appSettings}
-        mouse={mouse}
-        selecting={state.selecting}
-        setSelectedIcons={onIconsSelected}
-      />
-      <DashedBox startPos={state.selecting} mouse={mouse} />
-      <Windows
-        apps={state.apps}
-        onMouseDown={onFocusApp}
-        onClose={onCloseApp}
-        onMinimize={onMinimizeWindow}
-        onMaximize={onMaximizeWindow}
-        focusedAppId={focusedAppId}
-      />
-      <Footer
-        apps={state.apps}
-        onMouseDownApp={onMouseDownFooterApp}
-        focusedAppId={focusedAppId}
-        onMouseDown={onMouseDownFooter}
-        onClickMenuItem={onClickMenuItem}
-      />
-      {state.powerState !== POWER_STATE.START && (
+      {showDesktop && (
+        <>
+          <Icons
+            icons={state.icons}
+            onMouseDown={onMouseDownIcon}
+            onDoubleClick={onDoubleClickIcon}
+            displayFocus={state.focusing === FOCUSING.ICON}
+            appSettings={appSettings}
+            mouse={mouse}
+            selecting={state.selecting}
+            setSelectedIcons={onIconsSelected}
+          />
+          <DashedBox startPos={state.selecting} mouse={mouse} />
+          <Windows
+            apps={state.apps}
+            onMouseDown={onFocusApp}
+            onClose={onCloseApp}
+            onMinimize={onMinimizeWindow}
+            onMaximize={onMaximizeWindow}
+            focusedAppId={focusedAppId}
+            openApp={name => {
+              if (appSettings[name]) {
+                dispatch({ type: ADD_APP, payload: appSettings[name] });
+              }
+            }}
+          />
+          <Footer
+            apps={state.apps}
+            onMouseDownApp={onMouseDownFooterApp}
+            focusedAppId={focusedAppId}
+            onMouseDown={onMouseDownFooter}
+            onClickMenuItem={onClickMenuItem}
+          />
+        </>
+      )}
+      {state.powerState !== POWER_STATE.START && !state.computerOff && (
         <Modal
           onClose={onModalClose}
           onClickButton={onClickModalButton}
           mode={state.powerState}
+        />
+      )}
+      {state.computerOff && (
+        <ShutdownOverlay
+          phase={state.computerOff}
+          onVideoEnd={() => dispatch({ type: SHUTDOWN_VIDEO_END })}
+          onWake={() => dispatch({ type: WAKE_UP })}
         />
       )}
     </Container>

@@ -23,7 +23,8 @@ import stop from '../../../assets/windowsIcons/stop.png';
 import windows from '../../../assets/windowsIcons/windows.png';
 import dropdown from '../../../assets/windowsIcons/dropdown.png';
 
-function InternetExplorer({ onClose, showMySpace }) {
+function InternetExplorer({ onClose, showMySpace, openApp }) {
+  const [showMySpaceView, setShowMySpaceView] = useState(showMySpace);
   const [state, setState] = useState({
     route: 'main',
     query: '',
@@ -49,6 +50,10 @@ function InternetExplorer({ onClose, showMySpace }) {
         break;
       case 'Home Page':
       case 'Back':
+        goMain();
+        break;
+      case 'MySpace':
+        setShowMySpaceView(true);
         goMain();
         break;
       default:
@@ -138,7 +143,7 @@ function InternetExplorer({ onClose, showMySpace }) {
         <div className="ie__address_bar__content">
           <img src={ie} alt="ie" className="ie__address_bar__content__img" />
           <div className="ie__address_bar__content__text">
-            {showMySpace
+            {showMySpaceView
               ? 'http://www.myspace.com/kayawesley'
               : `https://www.google.com.tw${
                   state.route === 'search'
@@ -168,7 +173,7 @@ function InternetExplorer({ onClose, showMySpace }) {
       </section>
       <div className="ie__content">
         <div className="ie__content__inner">
-          {showMySpace ? (
+          {showMySpaceView ? (
             <MySpace />
           ) : (
             <Google

@@ -45,6 +45,7 @@ import backgammon from '../../assets/windowsIcons/892(16x16).png';
 import movieMaker from '../../assets/windowsIcons/894(16x16).png';
 import ie from '../../assets/windowsIcons/896(16x16).png';
 import messenger from '../../assets/windowsIcons/msn.png';
+import aimLogo from '../../assets/aim-logo.png';
 import spider from '../../assets/windowsIcons/spider.png';
 import freecell from '../../assets/windowsIcons/freecell.png';
 import heart from '../../assets/windowsIcons/heart.png';
@@ -366,8 +367,8 @@ export const AllPrograms = [
     items: [
       {
         type: 'item',
-        icon: empty,
-        text: '(Empty)',
+        icon: aimLogo,
+        text: 'AIM',
       },
     ],
   },
@@ -395,6 +396,11 @@ export const AllPrograms = [
     type: 'item',
     icon: messenger,
     text: 'Windows Messenger',
+  },
+  {
+    type: 'item',
+    icon: aimLogo,
+    text: 'AIM',
   },
   {
     type: 'item',

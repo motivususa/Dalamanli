@@ -425,12 +425,7 @@ const Favorites = [
   },
   {
     type: 'item',
-    text: 'MSN.com',
-    symbol: 'ie-paper',
-  },
-  {
-    type: 'item',
-    text: 'Radio Station Guide',
+    text: 'MySpace',
     symbol: 'ie-paper',
   },
 ];

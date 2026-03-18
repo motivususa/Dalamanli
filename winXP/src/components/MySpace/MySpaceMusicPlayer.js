@@ -206,6 +206,18 @@ function MySpaceMusicPlayer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /* ── Pause on WinXP shutdown (Turn Off) ── */
+  useEffect(() => {
+    const onShutdown = () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        setPlaying(false);
+      }
+    };
+    window.addEventListener('winxp-shutdown', onShutdown);
+    return () => window.removeEventListener('winxp-shutdown', onShutdown);
+  }, []);
+
   /* ── Connect Web Audio API for visualizer ── */
   const connectWebAudio = useCallback(() => {
     if (connectedRef.current) return;

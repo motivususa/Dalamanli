@@ -7,7 +7,7 @@ import Winamp from './Winamp';
 import Paint from './Paint';
 import Pinball from './Pinball';
 import LogOn from './LogOn';
-import AIM from './AIM';
+import AIM from './AIM/Loader';
 import iePaper from '../../assets/windowsIcons/ie-paper.png';
 import myspaceIcon from '../../assets/myspace-fav-icon.png';
 import ie from '../../assets/windowsIcons/ie.png';
@@ -121,6 +121,13 @@ export const defaultIconState = [
     icon: paintLarge,
     title: 'Paint',
     component: Paint,
+    isFocus: false,
+  },
+  {
+    id: 6,
+    icon: aimLogo,
+    title: 'AIM',
+    component: AIM,
     isFocus: false,
   },
 ];

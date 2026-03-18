@@ -6,7 +6,7 @@ const defaultPfp = `${process.env.PUBLIC_URL}/retro-popups/assets/default-pfp.jp
 
 function LogOn({ onClose }) {
   const [mode, setMode] = useState('login'); // 'login' | 'signup'
-  const [form, setForm] = useState({ name: '', username: '', email: '', password: '' });
+  const [form, setForm] = useState({ name: '', username: '', email: '', password: '', confirmPassword: '' });
   const [pfpPreview, setPfpPreview] = useState(defaultPfp);
   const fileInputRef = useRef(null);
 
@@ -44,37 +44,18 @@ function LogOn({ onClose }) {
           {mode === 'login' ? (
             <>
               <div className="field-row">
-                <label>Email:</label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={set('email')}
-                  placeholder="email"
-                  autoFocus
-                />
-              </div>
-              <div className="field-row">
-                <label>Username:</label>
+                <label><u>U</u>sername:</label>
                 <input
                   type="text"
                   value={form.username}
                   onChange={set('username')}
                   placeholder="username"
                   autoComplete="username"
+                  autoFocus
                 />
               </div>
               <div className="field-row">
-                <label>Name:</label>
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={set('name')}
-                  placeholder="name"
-                  autoComplete="name"
-                />
-              </div>
-              <div className="field-row">
-                <label>Password:</label>
+                <label><u>P</u>assword:</label>
                 <input
                   type="password"
                   value={form.password}
@@ -91,7 +72,7 @@ function LogOn({ onClose }) {
                 <p>Create an account to leave comments on the MySpace page, chat on AIM, and receive the newsletter.</p>
               </div>
               <div className="field-row">
-                <label>Name:</label>
+                <label><u>N</u>ame:</label>
                 <input
                   type="text"
                   value={form.name}
@@ -102,7 +83,7 @@ function LogOn({ onClose }) {
                 />
               </div>
               <div className="field-row">
-                <label>Username:</label>
+                <label><u>U</u>sername:</label>
                 <input
                   type="text"
                   value={form.username}
@@ -112,7 +93,7 @@ function LogOn({ onClose }) {
                 />
               </div>
               <div className="field-row">
-                <label>Email:</label>
+                <label><u>E</u>mail:</label>
                 <input
                   type="email"
                   value={form.email}
@@ -122,7 +103,7 @@ function LogOn({ onClose }) {
                 />
               </div>
               <div className="field-row">
-                <label>Password:</label>
+                <label><u>P</u>assword:</label>
                 <input
                   type="password"
                   value={form.password}
@@ -131,8 +112,18 @@ function LogOn({ onClose }) {
                   autoComplete="new-password"
                 />
               </div>
+              <div className="field-row">
+                <label><u>C</u>onfirm <u>p</u>assword:</label>
+                <input
+                  type="password"
+                  value={form.confirmPassword}
+                  onChange={set('confirmPassword')}
+                  placeholder="confirm password"
+                  autoComplete="new-password"
+                />
+              </div>
               <div className="field-row field-row--pfp">
-                <label>Profile picture:</label>
+                <label><u>P</u>rofile <u>p</u>icture:</label>
                 <label className="pfp-upload">
                   <div className="pfp-preview" onClick={() => fileInputRef.current?.click()}>
                     <img src={pfpPreview} alt="Profile" />
@@ -154,11 +145,8 @@ function LogOn({ onClose }) {
           <div className="btn-row">
             <span className="lang-badge">EN</span>
             <div className="btn-group">
-              <button type="submit" className="xp-btn">
-                {mode === 'login' ? 'OK' : 'Sign Up'}
-              </button>
               <button type="button" className="xp-btn" onClick={onClose}>
-                Cancel
+                Log In
               </button>
               {mode === 'login' ? (
                 <button

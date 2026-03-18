@@ -1,0 +1,140 @@
+import React, { useContext, useEffect, useState } from "react";
+import ImgIcon from "../assets/images/img.png";
+import Attached from "../assets/images/attached.ico";
+import { AuthContext } from "../context/AuthContext";
+import { ChatContext } from "../context/ChatContext";
+import {
+  arrayUnion,
+  doc,
+  serverTimestamp,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { db, storage } from "../firebase";
+import { v4 as uuid } from "uuid";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { ErrorContext } from "../context/ErrorContext";
+
+const Input = () => {
+  const [text, setText] = useState("");
+  const [img, setImg] = useState(null);
+  const { setError, setLoading } = useContext(ErrorContext);
+
+  const { currentUser } = useContext(AuthContext);
+  const { data } = useContext(ChatContext);
+
+  useEffect(() => {
+    setText("");
+    setImg(null);
+  }, [data.user]);
+
+  const handleSend = async (e) => {
+    e.preventDefault();
+
+    if (!img && !text) {
+      setError("Please enter a message or a photo");
+      return;
+    }
+
+    try {
+      if (img) {
+        setLoading({ value: 10, message: "uploading image", type: "input" });
+
+        const combinedId =
+          currentUser.uid > data.user.uid
+            ? currentUser.uid + data.user.uid
+            : data.user.uid + currentUser.uid;
+
+        const storageRef = ref(storage, `${combinedId}/${uuid()}`);
+        const uploadTask = uploadBytesResumable(storageRef, img);
+
+        setLoading({ value: 30, message: "uploading image", type: "input" });
+        await uploadTask;
+
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+        setLoading({ value: 60, message: "uploading image", type: "input" });
+        await updateDoc(doc(db, "chats", data.chatId), {
+          messages: arrayUnion({
+            id: uuid(),
+            text,
+            senderId: currentUser.uid,
+            date: Timestamp.now(),
+            img: downloadURL,
+          }),
+        });
+        setLoading(false);
+      } else {
+        await updateDoc(doc(db, "chats", data.chatId), {
+          messages: arrayUnion({
+            id: uuid(),
+            text,
+            senderId: currentUser.uid,
+            date: Timestamp.now(),
+          }),
+        });
+      }
+
+      await updateDoc(doc(db, "userChats", currentUser.uid), {
+        [data.chatId + ".read"]: false,
+        [data.chatId + ".lastMessage"]: {
+          sender: "you",
+          text: text || img.name,
+        },
+        [data.chatId + ".date"]: serverTimestamp(),
+      });
+
+      await updateDoc(doc(db, "userChats", data.user.uid), {
+        [data.chatId + ".read"]: false,
+        [data.chatId + ".lastMessage"]: {
+          sender: "them",
+          text: text || img.name,
+        },
+        [data.chatId + ".date"]: serverTimestamp(),
+      });
+    } catch (err) {
+      setLoading(false);
+      setError(err.message.replace("Error: ", ""));
+      console.error(err);
+    }
+
+    setText("");
+    setImg(null);
+  };
+
+  return (
+    <>
+      {img && (
+        <div className="aim-input__attached">
+          <img src={Attached} alt="" />
+          <p>{img.name}</p>
+        </div>
+      )}
+      <form onSubmit={handleSend} className="aim-input">
+        <input
+          className="aim-input__text"
+          type="text"
+          placeholder="Type something..."
+          onChange={(e) => setText(e.target.value)}
+          value={text}
+        />
+
+        <input
+          type="file"
+          style={{ display: "none" }}
+          id="aim-file"
+          onChange={(e) => setImg(e.target.files[0])}
+          accept="image/*"
+        />
+        <label htmlFor="aim-file" className="aim-input__image">
+          <img src={ImgIcon} alt="" />
+        </label>
+        <div className="aim-input__send">
+          <button type="submit">Send</button>
+        </div>
+      </form>
+    </>
+  );
+};
+
+export default Input;

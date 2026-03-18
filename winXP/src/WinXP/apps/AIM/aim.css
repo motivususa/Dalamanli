@@ -1,0 +1,593 @@
+/* AIM Messenger Styles - scoped with aim- prefix */
+
+.aim-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  background: #ece9d8;
+}
+
+.aim-link {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Sidebar */
+.aim-sidebar {
+  border-right: 1px solid #7f9db9;
+  background-color: #fff;
+  width: 200px;
+  min-width: 200px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Search */
+.aim-search__input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.aim-search__result {
+  cursor: pointer;
+  border: 1px solid #7f9db9;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aim-search__result img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.aim-search__name {
+  margin-bottom: 5px;
+}
+
+/* Requests */
+.aim-requests {
+  cursor: pointer;
+  border: 1px solid #7f9db9;
+  padding: 5px 0 5px 5px;
+  font-family: "Pixelated MS Sans Serif", Arial;
+}
+
+.aim-requests span {
+  color: blue;
+  text-decoration: underline;
+}
+
+.aim-requests-list__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  background: #ece9d8;
+  border-bottom: 1px solid #7f9db9;
+}
+
+.aim-requests-list__header button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.aim-requests-list__body {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Chats list */
+.aim-chats {
+  padding: 10px 10px 5px 5px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.aim-chats__friend {
+  cursor: pointer;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dotted #5b6c7c;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aim-chats__profile-pic {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.aim-chat-preview__name {
+  margin-bottom: 5px;
+}
+
+.aim-chat-preview__latest {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #5b6c7c;
+  font-family: "Pixelated MS Sans Serif", Arial;
+}
+
+.aim-chat-preview__latest span {
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aim-chat-preview .unread::after {
+  content: "";
+  display: block;
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  background-color: rgb(225, 50, 50);
+}
+
+/* User bar */
+.aim-userbar {
+  background-color: #fcfcfe;
+  position: relative;
+  margin-top: auto;
+  border-top: 1px solid #7f9db9;
+}
+
+.aim-user {
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.aim-user__details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.aim-user__profile-pic {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.aim-user__name {
+  font-size: 12px;
+  display: block;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.aim-user__email {
+  display: block;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Chat area */
+.aim-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.aim-chat__no-sender {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+}
+
+.aim-sender {
+  margin: 5px 0 10px 0;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.aim-sender__icon {
+  width: 20px;
+  height: 20px;
+}
+
+.aim-sender__name {
+  font-size: 12px;
+}
+
+/* Messages */
+.aim-messages {
+  flex: 1;
+  border: 1px solid #7f9db9;
+  background-color: #fff;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.aim-message:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.aim-message__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.aim-message__info {
+  width: 40px;
+}
+
+.aim-message__time {
+  display: none;
+  text-align: left;
+  font-size: 10px;
+  color: gray;
+  margin-top: 5px;
+}
+
+.aim-message__profile-pic {
+  display: none;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.aim-message__content {
+  max-width: 80%;
+  display: flex;
+  align-self: flex-start;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aim-message__text {
+  background-color: #d3e5fa;
+  padding: 10px 20px;
+  max-width: max-content;
+}
+
+.aim-message__image {
+  cursor: pointer;
+  width: 50%;
+}
+
+/* Owner messages */
+.aim-message--owner .aim-message__row {
+  flex-direction: row-reverse;
+}
+
+.aim-message--owner .aim-message__content {
+  align-items: flex-end;
+}
+
+.aim-message--owner .aim-message__time {
+  text-align: right;
+}
+
+.aim-message--owner .aim-message__text {
+  background-color: #0058f4;
+  color: white;
+}
+
+/* Show profile pic and time on last message in group */
+.aim-message:last-child .aim-message__profile-pic,
+.aim-message:last-child .aim-message__time {
+  display: block;
+}
+
+/* Input */
+.aim-input {
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.aim-input__text {
+  flex: 1;
+  padding: 4px;
+  border: 1px solid #7f9db9;
+  outline: none;
+  color: #2f2d52;
+  font-size: 12px;
+}
+
+.aim-input__image {
+  cursor: pointer;
+  margin: 0 8px 0 16px;
+}
+
+.aim-input__image img {
+  height: 24px;
+  width: 24px;
+}
+
+.aim-input__send {
+  font-size: 12px;
+}
+
+.aim-input__attached {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.aim-input__attached img {
+  width: 15px;
+  height: 15px;
+}
+
+/* Login */
+.aim-login {
+  padding: 20px;
+  background: #ece9d8;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.aim-login__title {
+  margin-bottom: 16px;
+}
+
+.aim-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aim-login__form input {
+  padding: 4px;
+  font-size: 12px;
+}
+
+.aim-login__form button {
+  margin-top: 4px;
+  font-size: 12px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+.aim-login__register {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+/* Register */
+.aim-register {
+  width: 100%;
+  padding: 10px;
+  background: #ece9d8;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.aim-register__title {
+  margin-bottom: 16px;
+}
+
+.aim-register__form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.aim-register__field {
+  display: grid;
+  align-items: center;
+  width: 95%;
+  gap: 5px;
+  grid-template-columns: 60px 1fr;
+}
+
+.aim-register__field--image {
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.aim-register__field--image img {
+  border-right: 1px solid #7f9db9;
+}
+
+.aim-register__field--pfp {
+  align-items: flex-start;
+}
+
+.aim-register__field--pfp .aim-register__pfp-upload {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.aim-register__pfp-preview {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #7f9db9;
+  background: #fcfcfe;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.aim-register__pfp-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aim-register__pfp-hint {
+  font-size: 10px;
+  color: #555;
+}
+
+.aim-register__image-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #fcfcfe;
+  border: 1px solid #7f9db9;
+}
+
+.aim-register__attached {
+  word-break: break-all;
+}
+
+.aim-register__submit {
+  margin: 6px 0 12px 0;
+  font-size: 12px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+.aim-register__existing {
+  font-size: 12px;
+}
+
+.aim-register__form input {
+  padding: 4px;
+  font-size: 12px;
+}
+
+/* Request cards */
+.aim-request__friend {
+  cursor: pointer;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dotted #5b6c7c;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aim-request__profile-pic {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+
+.aim-request-preview {
+  flex: 1;
+}
+
+.aim-request-preview__name {
+  margin-bottom: 10px;
+}
+
+.aim-request-preview__options {
+  display: flex;
+  gap: 10px;
+}
+
+/* Modal */
+.aim-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.aim-modal {
+  position: absolute;
+  z-index: 100000;
+  top: 50%;
+  left: 50%;
+  min-height: 150px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  background: #ece9d8;
+  border: 2px solid #0054e3;
+}
+
+.aim-modal__titlebar {
+  background: linear-gradient(180deg, #0058e6 0%, #3a93ff 100%);
+  color: white;
+  padding: 3px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.aim-modal__close {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.aim-modal__body {
+  margin: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.aim-modal__info {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  font-family: "Pixelated MS Sans Serif", Arial;
+}
+
+.aim-modal__message {
+  margin-top: 20px;
+}
+
+.aim-modal__image {
+  width: 40px;
+}
+
+.aim-modal__actions {
+  margin: auto 30px 0 30px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.aim-modal__loading {
+  min-width: 260px;
+}
+
+.aim-modal__loading-gif {
+  margin-top: -20px;
+  margin-bottom: 15px;
+}
+
+.aim-modal__loading-message {
+  margin-bottom: 10px;
+}
+
+.aim-modal__loader {
+  width: 100%;
+  flex-basis: 18px;
+}
