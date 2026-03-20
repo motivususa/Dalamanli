@@ -267,6 +267,10 @@ function WinXP() {
       dispatch({ type: ADD_APP, payload: appSettings.Paint });
     else if (o === 'AIM')
       dispatch({ type: ADD_APP, payload: appSettings.AIM });
+    else if (o === 'WebCam Viewer')
+      dispatch({ type: ADD_APP, payload: appSettings['WebCam Viewer'] });
+    else if (o === 'Welcome to my Windows')
+      dispatch({ type: ADD_APP, payload: appSettings.WelcomeToMyWindows });
     else if (o === 'Log Off')
       dispatch({ type: POWER_OFF, payload: POWER_STATE.LOG_OFF });
     else if (o === 'Turn Off Computer')

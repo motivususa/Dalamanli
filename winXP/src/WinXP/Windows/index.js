@@ -1,6 +1,6 @@
-import React, { useRef, memo } from 'react';
+import React, { useRef, memo, useState } from 'react';
 import useWindowSize from 'react-use/lib/useWindowSize';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import { useElementResize } from '../../hooks';
 import HeaderButtons from './HeaderButtons';
@@ -52,10 +52,20 @@ const Window = memo(function({
   className,
   openApp,
 }) {
+  const [shake, setShake] = useState(false);
+  const [showCloseHint, setShowCloseHint] = useState(false);
+
   function _onMouseDown() {
     onMouseDown(id);
   }
   function _onMouseUpClose() {
+    if (injectProps?.preventClose) {
+      setShake(true);
+      setShowCloseHint(true);
+      setTimeout(() => setShake(false), 400);
+      setTimeout(() => setShowCloseHint(false), 2500);
+      return;
+    }
     onMouseUpClose(id);
   }
   function _onMouseUpMinimize() {
@@ -98,7 +108,7 @@ const Window = memo(function({
   }
   return (
     <div
-      className={className}
+      className={`${className} ${shake ? 'window--shake' : ''}`}
       ref={ref}
       onMouseDown={_onMouseDown}
       style={{
@@ -108,12 +118,13 @@ const Window = memo(function({
         zIndex,
       }}
     >
-      <div className="header__bg" />
-      <header
-        className="app__header"
-        ref={dragRef}
-        onDoubleClick={onDoubleClickHeader}
-      >
+      <div className="window__shake-inner">
+        <div className="header__bg" />
+        <header
+          className="app__header"
+          ref={dragRef}
+          onDoubleClick={onDoubleClickHeader}
+        >
         <img
           onDoubleClick={_onMouseUpClose}
           src={header.icon}
@@ -132,22 +143,44 @@ const Window = memo(function({
           isFocus={isFocus}
         />
       </header>
-      <div className="app__content">
+        <div className="app__content">
         {component({
           onClose: _onMouseUpClose,
+          onForceClose: () => onMouseUpClose(id),
           onMinimize: _onMouseUpMinimize,
           isFocus,
           openApp,
+          showCloseHint,
+          closeHint: injectProps?.closeHint,
           ...injectProps,
         })}
+        </div>
       </div>
     </div>
   );
 });
 
+const shakeKeyframes = keyframes`
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+  20%, 40%, 60%, 80% { transform: translateX(6px); }
+`;
+
 const StyledWindow = styled(Window)`
   display: ${({ show }) => (show ? 'flex' : 'none')};
   position: absolute;
+
+  .window__shake-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  &.window--shake .window__shake-inner {
+    animation: ${shakeKeyframes} 0.4s ease-in-out;
+  }
+
   padding: 3px;
   padding: ${({ header }) => (header.invisible ? 0 : 3)}px;
   background-color: ${({ isFocus }) => (isFocus ? '#0831d9' : '#6582f5')};

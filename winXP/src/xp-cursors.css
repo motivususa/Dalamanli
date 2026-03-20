@@ -1,0 +1,61 @@
+/**
+ * Windows XP cursors — uses vars from injectXpCursorVars.js
+ *
+ * #root * + !important overrides styled-components' cursor:pointer so .cur actually shows.
+ * Pointer/hover targets listed below get the XP "link" hand.
+ */
+
+html,
+body {
+  cursor: var(--xp-cursor-default, auto) !important;
+}
+
+/* Base: XP arrow almost everywhere inside the app */
+#root,
+#root * {
+  cursor: var(--xp-cursor-default, auto) !important;
+}
+
+/* Clickable / interactive (XP hand) */
+#root a,
+#root a *,
+#root button,
+#root button *,
+#root [role='button'],
+#root [role='button'] *,
+#root [role='menuitem'],
+#root [role='menuitem'] *,
+#root [role='tab'],
+#root input[type='button'],
+#root input[type='submit'],
+#root input[type='reset'],
+#root input[type='checkbox'],
+#root input[type='radio'],
+#root select,
+#root label,
+#root .footer__start,
+#root .footer__window,
+#root .footer__icon--aim,
+#root .footer__icon--aim *,
+#root .com__content__left__card__text.link,
+#root .com__content__right__card__item--usb-video,
+#root .com__content__right__card__item--me,
+#root .com__content__right__card__item--me * {
+  cursor: var(--xp-cursor-pointer, pointer) !important;
+}
+
+/* Text caret (I-beam) */
+#root input[type='text'],
+#root input[type='password'],
+#root input[type='search'],
+#root input[type='url'],
+#root input[type='email'],
+#root input:not([type]),
+#root textarea {
+  cursor: var(--xp-cursor-text, text) !important;
+}
+
+/* Window chrome: dragging uses arrow in XP for title bar (resize corners are separate) */
+#root .app__header {
+  cursor: var(--xp-cursor-default, auto) !important;
+}

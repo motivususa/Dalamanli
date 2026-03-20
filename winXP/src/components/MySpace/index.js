@@ -6,10 +6,10 @@ const USER_NAME = 'Kaya Wesley';
 const FRIENDS = [
   { name: 'Tom', img: 'tom.jpg' },
   { name: '𝓯𝓻𝓲𝓳𝓸𝓵', img: 'frijol.jpg' },
-  { name: 'J♥a♥l♥e', img: 'jale.jpg' },
-  { name: 'Macc', img: 'macc.jpg' },
-  { name: 'Zeke', img: 'zeke.jpg' },
-  { name: 'Calypso', img: 'calypso.jpg' },
+  { name: '❤꧁ღ⊱♥ Tia ♥⊱ღ꧂❤', img: 'jale.jpg' },
+  { name: 'ｓｈｕｇｉ　ホ央維', img: 'shugi.JPEG' },
+  { name: '𝕽𝕽𝕵', img: 'RRJ.png' },
+  { name: '𝕕✫𝕧𝕖', img: 'dave.jpg' },
   { name: 'Zeke 2', img: 'zeke-chihuahua.jpg' },
   { name: 'CoolDog420', img: 'cooldog420.jpg' },
 ];
@@ -22,8 +22,10 @@ const DEFAULT_INTERESTS = [
   { category: 'General', content: 'Internet, Movies, Reading, Hiking, Travel, Creative projects' },
   { category: 'Music', content: 'Various bands and artists. Update with your favorites.' },
   { category: 'Movies', content: 'Update with your favorite films.' },
+  { category: 'Games', content: 'Update with your favorite games.' },
   { category: 'Television', content: 'Update with your favorite shows.' },
   { category: 'Books', content: 'Update with your favorite books or authors.' },
+  { category: 'Sports / Teams', content: 'Update with your favorite sports and teams.' },
   { category: 'Heroes', content: 'Update with people who inspire you.' },
 ];
 
@@ -32,8 +34,10 @@ const TOM_INTERESTS = [
   { category: 'General', content: 'Internet, Movies, Reading, Karaoke, Language, Culture, History of Communism, Philosophy, Singing/Writing Music, Running, Finding New Food, Hiking, Travel, Building alternate communities' },
   { category: 'Music', content: 'Bands: Beatles, Superdrag, Jackson 5, Weezer, Sex Pistols, Radiohead, The Doors, KISS... Solo Artists: Billy Joel, Bruce Springsteen, Elvis, David Bowie... Films: Lawrence of Arabia, Ben Hur, Patton... Directors: Kubrick, Coppola, Spielberg' },
   { category: 'Movies', content: 'Lawrence of Arabia, Ben Hur, Patton, Spartacus, Gandhi, The Godfather, Blade Runner, Good Will Hunting... Directors: Kubrick, Francis Coppola, Steven Spielberg' },
+  { category: 'Games', content: 'Minesweeper, Pinball, Solitaire' },
   { category: 'Television', content: 'Desperate Housewives, Lost, 24, American Idol, Grey\'s Anatomy, Prison Break' },
   { category: 'Books', content: 'Nietzsche, George Orwell, Milan Kundera, Laurens van der Post' },
+  { category: 'Sports / Teams', content: 'Update with your favorite sports and teams.' },
   { category: 'Heroes', content: 'Friedrich Nietzsche, Laurens van der Post, Frederick Dolan' },
 ];
 
@@ -41,7 +45,7 @@ const TOM_INTERESTS = [
 const DEFAULT_DETAILS = [
   { label: 'Status:', value: 'Single' },
   { label: 'Here for:', value: 'For memories' },
-  { label: 'Hometown:', value: 'Monterey, California' },
+  { label: 'Hometown:', value: 'Frankfurt, Germany' },
   { label: 'Ethnicity:', value: 'African American / Turkish' },
   { label: 'Zodiac Sign:', value: 'Virgo', href: '#virgo' },
   { label: 'Smoke / Drink:', value: 'No / No' },
@@ -119,7 +123,7 @@ const SEARCH_TABS = [
   { id: 'tblog', label: 'Blogs' },
 ];
 
-function MySpace() {
+function MySpace({ openApp }) {
   const [navOpen, setNavOpen] = useState(false);
   const [searchTab, setSearchTab] = useState('tms');
   const [comments, setComments] = useState([]);
@@ -176,7 +180,15 @@ function MySpace() {
                 </div>
                 <a href="#help">Help</a>
                 {' | '}
-                <a href="#signup">SignUp</a>
+                <a
+                  href="#signup"
+                  onClick={e => {
+                    e.preventDefault();
+                    openApp?.('LogOn');
+                  }}
+                >
+                  SignUp
+                </a>
               </div>
               <div className="clear"></div>
               <div className="header-search-row">
@@ -324,7 +336,7 @@ function MySpace() {
             <div className="userUrl">
               <div className="userUrlInner">
                 <p><strong>MySpace URL:</strong></p>
-                <p><a href={MYSPACE_URL}>{MYSPACE_URL}</a></p>
+                <p><a href="#" onClick={e => e.preventDefault()}>{MYSPACE_URL}</a></p>
               </div>
             </div>
             <MySpaceMusicPlayer />

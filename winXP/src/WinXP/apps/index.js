@@ -7,7 +7,9 @@ import Winamp from './Winamp';
 import Paint from './Paint';
 import Pinball from './Pinball';
 import LogOn from './LogOn';
+import WelcomeToMyWindows from './WelcomeToMyWindows';
 import AIM from './AIM/Loader';
+import WebCamViewer from './WebCamViewer';
 import iePaper from '../../assets/windowsIcons/ie-paper.png';
 import myspaceIcon from '../../assets/myspace-fav-icon.png';
 import ie from '../../assets/windowsIcons/ie.png';
@@ -24,6 +26,10 @@ import paint from '../../assets/windowsIcons/680(16x16).png';
 import pinballIcon from '../../assets/windowsIcons/pinball.png';
 import messenger from '../../assets/windowsIcons/msn.png';
 import aimLogo from '../../assets/aim-logo.png';
+/* My Computer “USB Video Device” row (large icon) */
+const usbVideoDeviceIcon = `${process.env.PUBLIC_URL || ''}/usb-video-device.svg`;
+/* Title bar only — add your own file: winXP/public/webcam-viewer-window-icon.png */
+const webCamViewerWindowIcon = `${process.env.PUBLIC_URL || ''}/webcam-viewer-window-icon.png`;
 
 const gen = () => {
   let id = -1;
@@ -60,7 +66,7 @@ export const defaultAppState = [
     component: LogOn,
     header: {
       icon: userIcon,
-      title: 'Log On to Windows',
+      title: 'Login to Windows',
       buttons: ['close'],
       noFooterWindow: true,
     },
@@ -71,6 +77,29 @@ export const defaultAppState = [
     defaultOffset: {
       x: window.innerWidth / 2 - 210,
       y: window.innerHeight / 2 - 160,
+    },
+    resizable: false,
+    minimized: true,
+    maximized: false,
+    id: genId(),
+    zIndex: genIndex(),
+  },
+  {
+    component: WelcomeToMyWindows,
+    header: {
+      icon: userIcon,
+      title: 'Welcome to my Windows',
+      buttons: ['close'],
+      noFooterWindow: true,
+    },
+    injectProps: { preventClose: true, closeHint: 'Click Next' },
+    defaultSize: {
+      width: 480,
+      height: 0,
+    },
+    defaultOffset: {
+      x: window.innerWidth / 2 - 240,
+      y: window.innerHeight / 2 - 200,
     },
     resizable: false,
     minimized: false,
@@ -291,7 +320,7 @@ export const appSettings = {
   LogOn: {
     header: {
       icon: userIcon,
-      title: 'Log On to Windows',
+      title: 'Login to Windows',
       buttons: ['close'],
       noFooterWindow: true,
     },
@@ -303,6 +332,28 @@ export const appSettings = {
     defaultOffset: {
       x: window.innerWidth / 2 - 210,
       y: window.innerHeight / 2 - 160,
+    },
+    resizable: false,
+    minimized: false,
+    maximized: false,
+    multiInstance: false,
+  },
+  WelcomeToMyWindows: {
+    header: {
+      icon: userIcon,
+      title: 'Welcome to my Windows',
+      buttons: ['close'],
+      noFooterWindow: true,
+    },
+    injectProps: { preventClose: true, closeHint: 'Click Next' },
+    component: WelcomeToMyWindows,
+    defaultSize: {
+      width: 480,
+      height: 0,
+    },
+    defaultOffset: {
+      x: window.innerWidth / 2 - 240,
+      y: window.innerHeight / 2 - 200,
     },
     resizable: false,
     minimized: false,
@@ -328,6 +379,25 @@ export const appSettings = {
     maximized: window.innerWidth < 800,
     multiInstance: true,
   },
+  'WebCam Viewer': {
+    header: {
+      icon: webCamViewerWindowIcon,
+      title: 'WebCam Viewer',
+    },
+    component: WebCamViewer,
+    defaultSize: {
+      width: 480,
+      height: 620,
+    },
+    defaultOffset: {
+      x: 220,
+      y: 36,
+    },
+    resizable: true,
+    minimized: false,
+    maximized: window.innerWidth < 800,
+    multiInstance: false,
+  },
 };
 
 export {
@@ -340,5 +410,7 @@ export {
   Paint,
   Pinball,
   LogOn,
+  WelcomeToMyWindows,
   AIM,
+  WebCamViewer,
 };

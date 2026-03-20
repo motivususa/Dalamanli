@@ -864,15 +864,7 @@
     document.body.appendChild(container);
     document.querySelectorAll('.rp-popup').forEach(makeDraggable);
     try { startDvdTshirt(); } catch (e) { console.warn('[RetroPopups] DVD t-shirt anim:', e); }
-    /* Guaranteed show: Trendsetters appears immediately after mount */
-    (function ensureTrendsShows() {
-      const el = document.getElementById('rp-trends');
-      if (el) {
-        showPopup('rp-trends');
-      } else {
-        setTimeout(ensureTrendsShows, 50);
-      }
-    })();
+    /* Popups only start after user clicks Next on Welcome window (welcome-complete event) */
   }
 
   function startDvdTshirt() {
@@ -916,48 +908,35 @@
 
   window.RetroPopups = {
     init() {
-      const shuffled = [...popupIds].sort(() => Math.random() - 0.5);
-      const shown = new Set();
-      let firstShown = false;
+      function startPopupSequence() {
+        const shuffled = [...popupIds].sort(() => Math.random() - 0.5);
+        const shown = new Set();
+        let firstShown = false;
 
-      function showNext() {
-        const available = shuffled.filter(id => !shown.has(id));
-        if (available.length === 0) return;
-        /* Show Trendsetters first so it's guaranteed to appear */
-        const id = firstShown ? available[rand(0, available.length - 1)] : (firstShown = true, 'rp-trends');
-        if (shown.has(id)) return;
-        shown.add(id);
-        showPopup(id);
+        function showNext() {
+          const available = shuffled.filter(id => !shown.has(id));
+          if (available.length === 0) return;
+          const id = firstShown ? available[rand(0, available.length - 1)] : (firstShown = true, 'rp-trends');
+          if (shown.has(id)) return;
+          shown.add(id);
+          showPopup(id);
+        }
+
+        /* First popup ~1s after user clicks Next (always Trendsetters) */
+        setTimeout(showNext, 1000);
+
+        /* Timed: show remaining popups every 12–18 seconds */
+        const interval = setInterval(() => {
+          if (shuffled.every(id => shown.has(id))) {
+            clearInterval(interval);
+            return;
+          }
+          showNext();
+        }, rand(12, 18) * 1000);
       }
 
-      /* Land: first popup ~1s after page load (always Trendsetters) */
-      setTimeout(showNext, 1000);
-
-      /* Interact: show popup on first click, scroll, or keydown */
-      const onInteraction = (function () {
-        let triggered = false;
-        return function () {
-          if (triggered) return;
-          triggered = true;
-          showNext();
-          /* Remove listeners after first interaction */
-          document.removeEventListener('click', onInteraction, true);
-          document.removeEventListener('scroll', onInteraction, true);
-          document.removeEventListener('keydown', onInteraction, true);
-        };
-      })();
-      document.addEventListener('click', onInteraction, true);
-      document.addEventListener('scroll', onInteraction, true);
-      document.addEventListener('keydown', onInteraction, true);
-
-      /* Timed fallback: show remaining popups every 12–18 seconds */
-      const interval = setInterval(() => {
-        if (shuffled.every(id => shown.has(id))) {
-          clearInterval(interval);
-          return;
-        }
-        showNext();
-      }, rand(12, 18) * 1000);
+      /* Wait for welcome-complete event (user clicked Next) before showing any popups */
+      window.addEventListener('welcome-complete', startPopupSequence, { once: true });
     },
     show: showPopup,
     close: closePopup,

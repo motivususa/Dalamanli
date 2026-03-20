@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const signupWindow = `${process.env.PUBLIC_URL}/retro-popups/assets/signup-window.png`;
 const defaultPfp = `${process.env.PUBLIC_URL}/retro-popups/assets/default-pfp.jpg`;
 
-function LogOn({ onClose }) {
+function LogOn({ onClose, openApp }) {
   const [mode, setMode] = useState('login'); // 'login' | 'signup'
   const [form, setForm] = useState({ name: '', username: '', email: '', password: '', confirmPassword: '' });
   const [pfpPreview, setPfpPreview] = useState(defaultPfp);
@@ -69,7 +69,7 @@ function LogOn({ onClose }) {
             <>
               <div className="info-box">
                 <p><strong>Join Kaya's World</strong></p>
-                <p>Create an account to leave comments on the MySpace page, chat on AIM, and receive the newsletter.</p>
+                <p>Create an account to leave comments on the MySpace page, chat on AIM, and receive the newsletters.</p>
               </div>
               <div className="field-row">
                 <label><u>N</u>ame:</label>
@@ -145,8 +145,15 @@ function LogOn({ onClose }) {
           <div className="btn-row">
             <span className="lang-badge">EN</span>
             <div className="btn-group">
+              <button
+                type="button"
+                className="xp-btn"
+                onClick={() => openApp && openApp('WelcomeToMyWindows')}
+              >
+                About
+              </button>
               <button type="button" className="xp-btn" onClick={onClose}>
-                Log In
+                Login
               </button>
               {mode === 'login' ? (
                 <button

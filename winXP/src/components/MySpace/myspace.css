@@ -84,6 +84,7 @@
 
 /* Utility row: MySpace en Español | International | Help | SignUp */
 .myspace-profile #header .header-outer > .right {
+  color: #fff;
   text-align: right;
   margin-bottom: 4px;
 }

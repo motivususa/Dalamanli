@@ -26,6 +26,7 @@ import windows from '../../../assets/windowsIcons/windows.png';
 import instagramLogo from '../../../assets/instagram-logo.png';
 import twitterLogo from '../../../assets/twitter-logo.png';
 import itunesLogo from '../../../assets/itunes-logo.jpg';
+const usbVideoDeviceIcon = `${process.env.PUBLIC_URL || ''}/usb-video-device.svg`;
 const socialLogos = {
   tiktok: `${process.env.PUBLIC_URL || ''}/social-logos/tiktok-logo.svg`,
   youtube: `${process.env.PUBLIC_URL || ''}/social-logos/youtube-logo.svg`,
@@ -35,7 +36,7 @@ const socialLogos = {
 /* Named target reuses same tab—prevents multiple tabs from opening on one click */
 const EXTERNAL_TARGET = 'winxp_external';
 
-function MyComputer({ onClose }) {
+function MyComputer({ onClose, openApp }) {
   function onClickOptionItem(item) {
     switch (item) {
       case 'Close':
@@ -298,6 +299,29 @@ function MyComputer({ onClose }) {
                   </div>
                   <div className="com__content__right__card__text">
                     CD Drive (D:)
+                  </div>
+                </div>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="com__content__right__card__item com__content__right__card__item--usb-video"
+                  onClick={() => openApp && openApp('WebCam Viewer')}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openApp && openApp('WebCam Viewer');
+                    }
+                  }}
+                >
+                  <div className="com__content__right__card__img-container">
+                    <img
+                      src={usbVideoDeviceIcon}
+                      alt=""
+                      className="com__content__right__card__img com__content__right__card__img--usb-video"
+                    />
+                  </div>
+                  <div className="com__content__right__card__text">
+                    USB Video Device
                   </div>
                 </div>
               </div>
@@ -687,6 +711,23 @@ const Div = styled.div`
     width: 200px;
     margin-bottom: 15px;
     height: auto;
+  }
+  .com__content__right__card__item--usb-video {
+    cursor: pointer;
+    border-radius: 2px;
+    padding: 2px;
+    margin: -2px -2px 13px -2px;
+    &:hover .com__content__right__card__text {
+      color: #1c68ff;
+      text-decoration: underline;
+    }
+    &:focus {
+      outline: 1px dotted #000;
+      outline-offset: 1px;
+    }
+  }
+  .com__content__right__card__img--usb-video {
+    object-fit: contain;
   }
   .com__content__right__card__img {
     width: 45px;

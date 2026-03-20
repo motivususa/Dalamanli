@@ -7,6 +7,7 @@ import startButton from '../../assets/windowsIcons/start.png';
 import sound from '../../assets/windowsIcons/690(16x16).png';
 import usb from '../../assets/windowsIcons/394(16x16).png';
 import risk from '../../assets/windowsIcons/229(16x16).png';
+import aimLogo from '../../assets/aim-logo.png';
 
 const getTime = () => {
   const date = new Date();
@@ -33,6 +34,10 @@ function Footer({
   onMouseDown,
   onClickMenuItem,
 }) {
+  function openAIM(e) {
+    e.stopPropagation();
+    onClickMenuItem('AIM');
+  }
   const [time, setTime] = useState(getTime);
   const [menuOn, setMenuOn] = useState(false);
   const menu = useRef(null);
@@ -92,6 +97,13 @@ function Footer({
       </div>
 
       <div className="footer__items right">
+        <div
+          className="footer__icon footer__icon--aim"
+          onClick={openAIM}
+          onMouseDown={e => e.stopPropagation()}
+        >
+          <img src={aimLogo} alt="AIM" />
+        </div>
         <img className="footer__icon" src={sound} alt="" />
         <img className="footer__icon" src={usb} alt="" />
         <img className="footer__icon" src={risk} alt="" />
@@ -214,6 +226,26 @@ const Container = styled.footer`
   .footer__icon {
     height: 15px;
     width: 15px;
+  }
+  .footer__icon--aim {
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      height: 15px;
+      width: 15px;
+      object-fit: contain;
+    }
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      img { filter: brightness(1.15); }
+    }
+    &:active {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
   }
   .footer__text {
     position: absolute;

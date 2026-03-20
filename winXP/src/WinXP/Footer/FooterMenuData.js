@@ -56,6 +56,8 @@ import pinball from '../../assets/windowsIcons/pinball.png';
 import restore from '../../assets/windowsIcons/restore.ico';
 import mine from '../../assets/minesweeper/mine-icon.png';
 
+const webCamViewerAllProgramsIcon = `${process.env.PUBLIC_URL || ''}/webcam-viewer-window-icon.png`;
+
 export const MyRecentDocuments = [
   {
     type: 'item',
@@ -76,6 +78,14 @@ export const ConnectTo = [
   },
 ];
 export const AllPrograms = [
+  {
+    type: 'item',
+    icon: tour,
+    text: 'Welcome to my Windows',
+  },
+  {
+    type: 'separator',
+  },
   {
     type: 'item',
     icon: access,
@@ -357,6 +367,19 @@ export const AllPrograms = [
         type: 'item',
         icon: spider,
         text: 'Spider Solitaire',
+      },
+    ],
+  },
+  {
+    type: 'menu',
+    icon: menu,
+    text: 'Imaging',
+    bottom: 'initial',
+    items: [
+      {
+        type: 'item',
+        icon: webCamViewerAllProgramsIcon,
+        text: 'WebCam Viewer',
       },
     ],
   },

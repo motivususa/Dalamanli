@@ -22,6 +22,7 @@ import refresh from '../../../assets/windowsIcons/refresh.png';
 import stop from '../../../assets/windowsIcons/stop.png';
 import windows from '../../../assets/windowsIcons/windows.png';
 import dropdown from '../../../assets/windowsIcons/dropdown.png';
+import aimLogo from '../../../assets/aim-logo.png';
 
 function InternetExplorer({ onClose, showMySpace, openApp }) {
   const [showMySpaceView, setShowMySpaceView] = useState(showMySpace);
@@ -116,6 +117,17 @@ function InternetExplorer({ onClose, showMySpace, openApp }) {
           />
           <span className="ie__function_bar__text">Favorites</span>
         </div>
+        <div
+          className="ie__function_bar__button"
+          onClick={() => openApp?.('AIM')}
+        >
+          <img
+            className="ie__function_bar__icon--normalize"
+            src={aimLogo}
+            alt="AIM"
+          />
+          <span className="ie__function_bar__text">AIM</span>
+        </div>
         <div className="ie__function_bar__button">
           <img className="ie__function_bar__icon" src={history} alt="" />
         </div>
@@ -174,7 +186,7 @@ function InternetExplorer({ onClose, showMySpace, openApp }) {
       <div className="ie__content">
         <div className="ie__content__inner">
           {showMySpaceView ? (
-            <MySpace />
+            <MySpace openApp={openApp} />
           ) : (
             <Google
               route={state.route}

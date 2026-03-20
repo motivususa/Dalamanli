@@ -1,7 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { injectXpCursorVars } from './injectXpCursorVars';
+injectXpCursorVars();
+
 import './index.css';
+import './xp-cursors.css';
 import './assets/clear.css';
 import './assets/font.css';
 import App from './App';
