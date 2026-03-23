@@ -39,6 +39,12 @@ export const Shell = styled.div<{ $deviceTheme: DeviceThemeName }>`
     transform-origin: top center;
     /* Collapse the dead space that scale leaves behind */
     margin-bottom: calc((var(--mobile-scale) - 1) * 37em);
+    /*
+     * Safari iOS: transform:scale breaks overflow:hidden + border-radius clipping.
+     * This forces Safari to respect the rounded corners on transformed elements.
+     */
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    isolation: isolate;
   }
 
   @keyframes descend {
