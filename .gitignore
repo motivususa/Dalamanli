@@ -18,6 +18,15 @@
 **/yarn-debug.log*
 **/yarn-error.log*
 
+# Emscripten SDK (large; not part of this app’s source)
+emsdk/
+
+# Local AI / editor config
+.claude/
+**/.claude/
+
+# aim-messenger (if tracked later, still skip its deps)
+aim-messenger/node_modules/
+
 # Embedded/nested repos (optional - remove if you want to track them)
 # SpaceCadetPinball-build/
-# emsdk/

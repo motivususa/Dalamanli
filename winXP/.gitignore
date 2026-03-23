@@ -24,5 +24,6 @@ yarn-debug.log*
 yarn-error.log*
 .env
 
-# ~256MB — over GitHub’s 100MB limit; keep locally or host via CDN/LFS
+# ~256MB — over GitHub’s 100MB limit; not in repo. Local dev only until
+# AquariumScreensaver.js uses a CDN URL (or LFS) for production.
 public/aquarium-screensaver.mp4

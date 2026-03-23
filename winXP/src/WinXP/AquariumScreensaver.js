@@ -2,6 +2,9 @@ import React, { useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 
+/* Production (Netlify / GitHub): this file is gitignored (~256MB). For deploys,
+   point VIDEO at a CDN URL (Cloudinary, R2, etc.) or use Git LFS — keep the
+   local public/ path until that URL exists. */
 const VIDEO = `${process.env.PUBLIC_URL || ''}/aquarium-screensaver.mp4`;
 
 const Overlay = styled.div`
