@@ -1,8 +1,14 @@
-const AUDIO_BASE = "/myspace/myspace-music-player-extended/audio";
-const DEFAULT_ARTWORK =
-  "/myspace/myspace-music-player-extended/img/static-skies-demo.jpg";
-const ALT_ARTWORK =
-  "/myspace/myspace-music-player-extended/img/hcw-album.jpg";
+import { withBasePath } from "@/utils/withBasePath";
+
+const AUDIO_BASE = withBasePath(
+  "/myspace/myspace-music-player-extended/audio"
+);
+const DEFAULT_ARTWORK = withBasePath(
+  "/myspace/myspace-music-player-extended/img/static-skies-demo.jpg"
+);
+const ALT_ARTWORK = withBasePath(
+  "/myspace/myspace-music-player-extended/img/hcw-album.jpg"
+);
 
 const DISPLAY_OVERRIDES: Record<string, { artist: string; name: string }> = {
   "drake-Bria's Interlude.mp3": {

@@ -15,7 +15,6 @@ import {
   Sticker,
   Sticker2,
   Sticker3,
-  MobileScaleWrapper,
 } from "@/components/Ipod/Styled";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SpotifySDKProvider } from "@/providers/SpotifySdkProvider";
@@ -77,7 +76,6 @@ const Ipod = ({ appleAccessToken }: Props) => {
                 <SoundEffectsProvider>
                   <SettingsContext.Consumer>
                     {([{ deviceTheme }]) => (
-                      <MobileScaleWrapper>
                       <Shell $deviceTheme={deviceTheme}>
                         <Sticker $deviceTheme={deviceTheme} />
                         <Sticker2 $deviceTheme={deviceTheme} />
@@ -92,7 +90,6 @@ const Ipod = ({ appleAccessToken }: Props) => {
                           <ClickWheel />
                         </ClickWheelContainer>
                       </Shell>
-                      </MobileScaleWrapper>
                     )}
                   </SettingsContext.Consumer>
                 </SoundEffectsProvider>

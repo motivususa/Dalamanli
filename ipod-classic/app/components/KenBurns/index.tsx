@@ -3,7 +3,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useInterval } from "@/hooks";
 import styled from "styled-components";
 
-const Container = styled.div``;
+const Container = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+`;
 
 interface ImageProps {
   $zIndex: number;

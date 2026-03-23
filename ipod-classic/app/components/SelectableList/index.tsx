@@ -156,7 +156,7 @@ const SelectableList = ({
     let scroller: HTMLElement | null = container.parentElement;
     while (scroller) {
       const style = window.getComputedStyle(scroller);
-      if (style.overflow === 'auto' || style.overflowY === 'auto') break;
+      if (style.overflow === "auto" || style.overflowY === "auto") break;
       scroller = scroller.parentElement;
     }
     if (!scroller) return;

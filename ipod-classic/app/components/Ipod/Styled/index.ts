@@ -28,7 +28,12 @@ export const Shell = styled.div<{ $deviceTheme: DeviceThemeName }>`
     max-height: 37em;
     border-radius: 30px;
     margin: 0 auto;
-    /* No transform here — scaling is handled by MobileScaleWrapper parent */
+    --mobile-scale: min(0.82, calc(100vw / 370px));
+    transform: scale(var(--mobile-scale));
+    transform-origin: top center;
+    margin-bottom: calc((var(--mobile-scale) - 1) * 37em);
+    will-change: transform;
+    clip-path: inset(0 0 0 0 round 30px);
   }
 
   @keyframes descend {
@@ -91,27 +96,4 @@ export const Sticker3 = styled.div<{ $deviceTheme: DeviceThemeName }>`
     getTheme($deviceTheme).body.sticker3?.background};
   ${({ $deviceTheme: deviceTheme }) =>
     getTheme(deviceTheme).body.sticker3?.styles ?? {}};
-`;
-
-/**
- * Outer wrapper that applies CSS scale on mobile only.
- * Keeping this OUTSIDE the Shell means all getBoundingClientRect()
- * calls inside Shell (CoverFlow midpoint, scroll positions) return
- * real unscaled values — the scale is purely visual at this layer.
- */
-export const MobileScaleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-
-  ${Screen.SM.MediaQuery} {
-    --s: min(0.82, calc(100vw / 370px));
-    transform: scale(var(--s));
-    transform-origin: top center;
-    /* Collapse dead space left by scale */
-    height: calc(37em * var(--s));
-    align-items: flex-start;
-  }
 `;

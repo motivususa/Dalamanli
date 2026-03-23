@@ -135,7 +135,7 @@ export const ClickWheel = () => {
     }
   }, []);
 
-  const handlePan = useCallback((_: PointerEvent, info: PanInfo) => {
+  const handlePan = useCallback((event: PointerEvent, _info: PanInfo) => {
     if (!rootContainerRef.current) {
       return;
     }
@@ -144,7 +144,9 @@ export const ClickWheel = () => {
       rootContainerRef.current.getBoundingClientRect()
     );
     const startPoint = startPointRef.current;
-    const currentPoint = info.point;
+    // Use native client coords (same space as getBoundingClientRect). Framer's
+    // info.point can disagree when an ancestor applies CSS transform: scale.
+    const currentPoint = { x: event.clientX, y: event.clientY };
 
     const startAngleDeg = getAngleBetweenPoints(startPoint, centerPoint);
     const currentAngleDeg = getAngleBetweenPoints(currentPoint, centerPoint);
