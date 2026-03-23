@@ -145,22 +145,26 @@ const SelectableList = ({
 
   /** Always make sure the selected item is within the screen's view. */
   useEffect(() => {
-    // Delay "isMounted" so that the enter animation doesn't get interrupted.
-    // I was stuck on this for like 12 hours and was wondering why
-    // the animation wasn't finishing...
-    if (isMounted && containerRef.current && fullOptions.length) {
-      const { children } = containerRef.current;
+    if (!isMounted || !containerRef.current || !fullOptions.length) return;
 
-      // Make sure the pagination loading indicator is in view.
-      if (loadingNextItems) {
-        children[activeIndex + 1]?.scrollIntoView({
-          block: "nearest",
-        });
-      } else {
-        children[activeIndex]?.scrollIntoView({
-          block: "nearest",
-        });
-      }
+    const container = containerRef.current;
+    const targetIndex = loadingNextItems ? activeIndex + 1 : activeIndex;
+    const child = container.children[targetIndex] as HTMLElement | undefined;
+    if (!child) return;
+
+    // Manual scroll instead of scrollIntoView — scrollIntoView breaks under
+    // CSS transform:scale on Safari iOS because it miscalculates scroll offsets.
+    const containerTop    = container.scrollTop;
+    const containerBottom = containerTop + container.clientHeight;
+    const childTop        = child.offsetTop;
+    const childBottom     = childTop + child.offsetHeight;
+
+    if (childTop < containerTop) {
+      // Item is above the visible area — scroll up
+      container.scrollTop = childTop;
+    } else if (childBottom > containerBottom) {
+      // Item is below the visible area — scroll down
+      container.scrollTop = childBottom - container.clientHeight;
     }
   }, [activeIndex, isMounted, fullOptions.length, loadingNextItems]);
 

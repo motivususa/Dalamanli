@@ -68,7 +68,7 @@ export const SoundEffectsProvider = ({ children }: Props) => {
   const bufForwardRef   = useRef<AudioBuffer | null>(null);
   const bufBackwardRef  = useRef<AudioBuffer | null>(null);
   const bufClickRef     = useRef<AudioBuffer | null>(null);
-  const loadedRef       = useRef(false);
+
 
   useEffect(() => {
     soundsMutedRef.current = soundsMuted;
@@ -78,9 +78,12 @@ export const SoundEffectsProvider = ({ children }: Props) => {
    * Create the AudioContext and decode all files on the first user gesture.
    * Safari requires AudioContext to be created inside a user-gesture handler.
    */
-  const ensureLoaded = useCallback(async () => {
-    if (loadedRef.current) return;
-    loadedRef.current = true;
+  // Store the loading promise so concurrent calls all await the same one
+  const loadingPromiseRef = useRef<Promise<void> | null>(null);
+
+  const ensureLoaded = useCallback((): Promise<void> => {
+    if (loadingPromiseRef.current) return loadingPromiseRef.current;
+    loadingPromiseRef.current = (async () => {
 
     try {
       const AudioCtx =
@@ -102,36 +105,42 @@ export const SoundEffectsProvider = ({ children }: Props) => {
       bufBackwardRef.current = bwd;
       bufClickRef.current    = clk;
     } catch {}
+    })();
+    return loadingPromiseRef.current!;
   }, []);
 
   const onForwardScroll = useCallback(() => {
     const now = Date.now();
     if (now - lastScrollRef.current < 80) return;
     lastScrollRef.current = now;
-    ensureLoaded();
-    if (!soundsMutedRef.current && audioCtxRef.current) {
-      playBuffer(audioCtxRef.current, bufForwardRef.current, 0.6);
-    }
     vibrate(8);
+    // ensureLoaded resolves instantly after first call
+    ensureLoaded().then(() => {
+      if (!soundsMutedRef.current && audioCtxRef.current) {
+        playBuffer(audioCtxRef.current, bufForwardRef.current, 0.6);
+      }
+    });
   }, [ensureLoaded]);
 
   const onBackwardScroll = useCallback(() => {
     const now = Date.now();
     if (now - lastScrollRef.current < 80) return;
     lastScrollRef.current = now;
-    ensureLoaded();
-    if (!soundsMutedRef.current && audioCtxRef.current) {
-      playBuffer(audioCtxRef.current, bufBackwardRef.current, 0.6);
-    }
     vibrate(8);
+    ensureLoaded().then(() => {
+      if (!soundsMutedRef.current && audioCtxRef.current) {
+        playBuffer(audioCtxRef.current, bufBackwardRef.current, 0.6);
+      }
+    });
   }, [ensureLoaded]);
 
   const onButtonClick = useCallback(() => {
-    ensureLoaded();
-    if (!soundsMutedRef.current && audioCtxRef.current) {
-      playBuffer(audioCtxRef.current, bufClickRef.current, 0.75);
-    }
     vibrate([12, 0, 12]);
+    ensureLoaded().then(() => {
+      if (!soundsMutedRef.current && audioCtxRef.current) {
+        playBuffer(audioCtxRef.current, bufClickRef.current, 0.75);
+      }
+    });
   }, [ensureLoaded]);
 
   useEffect(() => {
