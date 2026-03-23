@@ -4,96 +4,78 @@ import { useSettings } from "@/hooks";
 
 export const SoundEffectsContext = createContext(null);
 
+const PUBLIC = process.env.NEXT_PUBLIC_BASE_PATH ?? "/ipod";
+
+const SOUND_FORWARD = `${PUBLIC}/sounds/right.wav`;  // scrolling forward (down)
+const SOUND_BACKWARD = `${PUBLIC}/sounds/left.wav`;  // scrolling backward (up)
+const SOUND_CLICK = `${PUBLIC}/sounds/click.mp3`;    // any button press
+
 interface Props {
   children: React.ReactNode;
 }
 
-/** Synthesized click-wheel tick — no file needed, zero latency */
-function playClickWheelTick(volume = 0.25) {
-  try {
-    const ctx = new (window.AudioContext ||
-      (window as any).webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(1200, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.02);
-
-    gain.gain.setValueAtTime(volume, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.03);
-
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.03);
-
-    setTimeout(() => ctx.close().catch(() => {}), 200);
-  } catch {
-    // Never break navigation
-  }
-}
-
-/** Synthesized button click — lower pitch than scroll tick */
-function playButtonClick(volume = 0.32) {
-  try {
-    const ctx = new (window.AudioContext ||
-      (window as any).webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(900, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.03);
-
-    gain.gain.setValueAtTime(volume, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
-
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.04);
-
-    setTimeout(() => ctx.close().catch(() => {}), 200);
-  } catch {}
-}
-
-/** Haptic feedback */
+/** Haptic feedback — short pulse for scroll, double-tap for click */
 function vibrate(pattern: number | number[]) {
   try {
     if (navigator.vibrate) navigator.vibrate(pattern);
   } catch {}
 }
 
+/** Play a short audio file. Resets and replays if already playing. */
+function makePlayer(url: string, volume = 0.5) {
+  let audio: HTMLAudioElement | null = null;
+
+  return function play(muted: boolean) {
+    if (muted) return;
+    try {
+      if (!audio) {
+        audio = new Audio(url);
+        audio.volume = volume;
+      }
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    } catch {}
+  };
+}
+
 export const SoundEffectsProvider = ({ children }: Props) => {
   const { soundsMuted } = useSettings();
   const soundsMutedRef = useRef(soundsMuted);
-  // Throttle scroll sound — min 80ms between ticks so rapid scrolling
-  // doesn't fire a cacophony of overlapping sounds
-  const lastScrollSoundRef = useRef(0);
+
+  // Throttle scroll sounds — min 80ms between ticks
+  const lastScrollRef = useRef(0);
+
+  // Pre-build players once so Audio objects are reused (no reload lag)
+  const playForward  = useRef(makePlayer(SOUND_FORWARD,  0.6));
+  const playBackward = useRef(makePlayer(SOUND_BACKWARD, 0.6));
+  const playClick    = useRef(makePlayer(SOUND_CLICK,    0.55));
 
   useEffect(() => {
     soundsMutedRef.current = soundsMuted;
   }, [soundsMuted]);
 
-  const onScroll = useCallback(() => {
+  const onForwardScroll = useCallback(() => {
     const now = Date.now();
-    if (now - lastScrollSoundRef.current < 80) return; // throttle
-    lastScrollSoundRef.current = now;
-
-    if (!soundsMutedRef.current) playClickWheelTick(0.25);
+    if (now - lastScrollRef.current < 80) return;
+    lastScrollRef.current = now;
+    playForward.current(soundsMutedRef.current);
     vibrate(8);
   }, []);
 
-  const onClick = useCallback(() => {
-    if (!soundsMutedRef.current) playButtonClick(0.32);
+  const onBackwardScroll = useCallback(() => {
+    const now = Date.now();
+    if (now - lastScrollRef.current < 80) return;
+    lastScrollRef.current = now;
+    playBackward.current(soundsMutedRef.current);
+    vibrate(8);
+  }, []);
+
+  const onButtonClick = useCallback(() => {
+    playClick.current(soundsMutedRef.current);
     vibrate([12, 0, 12]);
   }, []);
 
   useEffect(() => {
-    const scrollEvents: IpodEvent[] = ["forwardscroll", "backwardscroll"];
     const clickEvents: IpodEvent[] = [
       "centerclick",
       "menuclick",
@@ -102,15 +84,16 @@ export const SoundEffectsProvider = ({ children }: Props) => {
       "playpauseclick",
     ];
 
-    for (const evt of scrollEvents) window.addEventListener(evt, onScroll);
-    for (const evt of clickEvents) window.addEventListener(evt, onClick);
+    window.addEventListener("forwardscroll",  onForwardScroll);
+    window.addEventListener("backwardscroll", onBackwardScroll);
+    for (const evt of clickEvents) window.addEventListener(evt, onButtonClick);
 
     return () => {
-      for (const evt of scrollEvents)
-        window.removeEventListener(evt, onScroll);
-      for (const evt of clickEvents) window.removeEventListener(evt, onClick);
+      window.removeEventListener("forwardscroll",  onForwardScroll);
+      window.removeEventListener("backwardscroll", onBackwardScroll);
+      for (const evt of clickEvents) window.removeEventListener(evt, onButtonClick);
     };
-  }, [onScroll, onClick]);
+  }, [onForwardScroll, onBackwardScroll, onButtonClick]);
 
   return (
     <SoundEffectsContext.Provider value={null}>
