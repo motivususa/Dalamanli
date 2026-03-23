@@ -43,8 +43,9 @@ export const Shell = styled.div<{ $deviceTheme: DeviceThemeName }>`
      * Safari iOS: transform:scale breaks overflow:hidden + border-radius clipping.
      * This forces Safari to respect the rounded corners on transformed elements.
      */
-    -webkit-mask-image: -webkit-radial-gradient(white, black);
-    isolation: isolate;
+    /* Force Safari to respect border-radius on transformed elements */
+    will-change: transform;
+    clip-path: inset(0 0 0 0 round 30px);
   }
 
   @keyframes descend {
