@@ -85,9 +85,9 @@ const Ipod = ({ appleAccessToken }: Props) => {
                             <ViewManager />
                           </ScreenTouchHandler>
                         </ScreenContainer>
+                        <WheelHelpTooltip />
                         <ClickWheelContainer>
                           <ClickWheel />
-                          <WheelHelpTooltip />
                         </ClickWheelContainer>
                       </Shell>
                     )}
