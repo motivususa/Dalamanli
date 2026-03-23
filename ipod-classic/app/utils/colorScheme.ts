@@ -60,7 +60,7 @@ const darkColorTheme: ColorTheme = {
   grey6: "#1C1C1E",
   white: "#FFFFFF",
   background: {
-    primary: "#000000",
+    primary: "#121212",
     secondary: "#1C1C1E",
     tertiary: "#2C2C2E",
   },

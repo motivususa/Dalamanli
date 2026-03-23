@@ -79,33 +79,25 @@ export const LocalAudioProvider = ({ children }: Props) => {
       indexRef.current = clampedIdx;
       const song = queue[clampedIdx];
 
+      audio.pause();
       audio.src = song.url;
-      audio.load();
-
       setPlaybackInfo((prev) => ({ ...prev, isLoading: true }));
 
-      const onCanPlay = () => {
-        audio.removeEventListener("canplay", onCanPlay);
-        audio
-          .play()
-          .then(() => {
-            setPlaybackInfo((prev) => ({
-              ...prev,
-              isPlaying: true,
-              isPaused: false,
-              isLoading: false,
-              duration: audio.duration || 0,
-            }));
-          })
-          .catch(() => {
-            setPlaybackInfo((prev) => ({
-              ...prev,
-              isLoading: false,
-            }));
-          });
-      };
+      audio
+        .play()
+        .then(() => {
+          setPlaybackInfo((prev) => ({
+            ...prev,
+            isPlaying: true,
+            isPaused: false,
+            isLoading: false,
+            duration: audio.duration || 0,
+          }));
+        })
+        .catch(() => {
+          setPlaybackInfo((prev) => ({ ...prev, isLoading: false }));
+        });
 
-      audio.addEventListener("canplay", onCanPlay);
       syncNowPlaying();
     },
     [syncNowPlaying]

@@ -120,6 +120,7 @@ export const ClickWheel = () => {
   const playPauseButtonRef = useRef<HTMLDivElement>(null);
 
   const hasScrolledRef = useRef(false);
+  const pressHandledRef = useRef(false);
   const startPointRef = useRef({ x: 0, y: 0 });
 
   const handleWheelPress = useCallback((point: { x: number; y: number }) => {
@@ -173,16 +174,18 @@ export const ClickWheel = () => {
       const isPressEvent = !hasScrolledRef.current && distance < PAN_THRESHOLD;
 
       if (isPressEvent) {
+        pressHandledRef.current = true;
         handleWheelPress({
           x: event.clientX,
           y: event.clientY,
         });
       }
 
-      // Reset scroll tracking for the next pan gesture
-      // Use a timeout to prevent click events from firing immediately after pan
+      // Reset tracking for the next gesture.
+      // Timeout prevents the subsequent click event from double-dispatching.
       setTimeout(() => {
         hasScrolledRef.current = false;
+        pressHandledRef.current = false;
       }, 50);
     },
     [handleWheelPress]
@@ -197,8 +200,7 @@ export const ClickWheel = () => {
 
   const handlePress = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      // If the user just scrolled, ignore the click event that might follow
-      if (hasScrolledRef.current) {
+      if (hasScrolledRef.current || pressHandledRef.current) {
         return;
       }
 

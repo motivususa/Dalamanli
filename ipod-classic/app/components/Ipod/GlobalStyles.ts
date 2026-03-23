@@ -33,11 +33,15 @@ export const GlobalStyles = createGlobalStyle`
       color-scheme: dark;
     }
     body {
-      background: #3F4249;
+      background: #121212;
     }
   }
 
-  body.ipod-night-mode {
-    background: #3F4249 !important;
+  /* Set from DarkSurroundSync: OS dark, night hours, or black device theme */
+  html.ipod-dark-surround {
+    color-scheme: dark;
+  }
+  body.ipod-dark-surround {
+    background: #121212 !important;
   }
 `;

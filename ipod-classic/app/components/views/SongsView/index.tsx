@@ -15,13 +15,13 @@ const SongsView = ({ songs }: Props) => {
 
   const options: SelectableListOption[] = useMemo(
     () =>
-      songs.map((song) => ({
+      songs.map((song, index) => ({
         type: "song",
         label: song.name,
         sublabel: `${song.artistName} • ${song.albumName}`,
         queueOptions: {
-          song,
-          startPosition: 0,
+          songs,
+          startPosition: index,
         },
         imageUrl: Utils.getArtwork(50, song.artwork?.url),
         showNowPlayingView: true,
