@@ -52,6 +52,16 @@ const useScrollHandler = (
   /** Only fire events on the top-most view. */
   const isActive = viewStack[viewStack.length - 1].id === id;
 
+  /**
+   * Allow scrolling even when nowPlaying is on top of this view.
+   * This lets users browse the song list while music is playing.
+   * We check if this view is in the stack AND the only thing above it is nowPlaying.
+   */
+  const isActiveOrBehindNowPlaying = isActive || (
+    viewStack.some(v => v.id === id) &&
+    viewStack[viewStack.length - 1].id === "nowPlaying"
+  );
+
   /** Wait until the user stops scrolling to check for a new preview to display. */
   const updatePreview = useCallback(
     (i: number) => {
@@ -67,12 +77,12 @@ const useScrollHandler = (
   const debouncedUpdatePreview = useDebouncedCallback(updatePreview, 750);
 
   const handleForwardScroll = useCallback(() => {
-    if (isActive) {
+    if (isActiveOrBehindNowPlaying) {
       triggerHaptics(true);
     }
 
     setIndex((prevIndex) => {
-      if (prevIndex < options.length - 1 && isActive) {
+      if (prevIndex < options.length - 1 && isActiveOrBehindNowPlaying) {
         debouncedUpdatePreview(prevIndex + 1);
 
         // Trigger near-end-of-list callback when we're halfway through the current list.
@@ -88,26 +98,26 @@ const useScrollHandler = (
     });
   }, [
     debouncedUpdatePreview,
-    isActive,
+    isActiveOrBehindNowPlaying,
     onNearEndOfList,
     options.length,
     triggerHaptics,
   ]);
 
   const handleBackwardScroll = useCallback(() => {
-    if (isActive) {
+    if (isActiveOrBehindNowPlaying) {
       triggerHaptics(true);
     }
 
     setIndex((prevIndex) => {
-      if (prevIndex > 0 && isActive) {
+      if (prevIndex > 0 && isActiveOrBehindNowPlaying) {
         debouncedUpdatePreview(prevIndex - 1);
         return prevIndex - 1;
       }
 
       return prevIndex;
     });
-  }, [debouncedUpdatePreview, isActive, triggerHaptics]);
+  }, [debouncedUpdatePreview, isActiveOrBehindNowPlaying, triggerHaptics]);
 
   /** Parses the selected option for a new view to show or song to play. */
   const handleCenterClick = useCallback(async () => {

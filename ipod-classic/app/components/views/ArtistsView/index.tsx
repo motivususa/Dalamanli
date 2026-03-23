@@ -1,13 +1,8 @@
-import { useCallback, useMemo } from "react";
-
-import AuthPrompt from "@/components/AuthPrompt";
-import SelectableList, {
-  SelectableListOption,
-} from "@/components/SelectableList";
-import { useMenuHideView, useScrollHandler, useSettings } from "@/hooks";
+import { useMemo } from "react";
+import SelectableList, { SelectableListOption } from "@/components/SelectableList";
+import { useMenuHideView, useScrollHandler } from "@/hooks";
 import * as Utils from "@/utils";
-
-import { useFetchArtists } from "@/hooks/utils/useDataFetcher";
+import { MYSPACE_ALBUMS, MYSPACE_ARTISTS } from "@/data/myspaceTracks";
 
 interface Props {
   artists?: MediaApi.Artist[];
@@ -15,71 +10,43 @@ interface Props {
   showImages?: boolean;
 }
 
-const ArtistsView = ({
-  artists,
-  inLibrary = true,
-  showImages = false,
-}: Props) => {
+const ArtistsView = ({ artists, showImages = false }: Props) => {
   useMenuHideView("artists");
-  const { isAuthorized } = useSettings();
-  const {
-    data: fetchedArtists,
-    fetchNextPage,
-    isFetchingNextPage,
-    isLoading: isQueryLoading,
-  } = useFetchArtists({
-    lazy: !!artists,
-  });
 
-  const options: SelectableListOption[] = useMemo(() => {
-    const data =
-      artists ?? fetchedArtists?.pages.flatMap((page) => page?.data ?? []);
+  // Use passed artists or fall back to local MySpace artists
+  const data = artists ?? MYSPACE_ARTISTS;
 
-    return (
-      data?.map(
-        (artist): SelectableListOption => ({
+  const options: SelectableListOption[] = useMemo(
+    () =>
+      data.map((artist): SelectableListOption => {
+        // Find albums by this artist from local data
+        const artistAlbums = MYSPACE_ALBUMS.filter(
+          (a) => a.artistName === artist.name
+        );
+        return {
           type: "view",
           headerTitle: artist.name,
           label: artist.name,
-          viewId: "artist",
+          sublabel: `${artistAlbums.reduce((sum, a) => sum + (a.songs?.length ?? 0), 0)} songs`,
           imageUrl: showImages
-            ? (Utils.getArtwork(50, artist.artwork?.url) ?? "artists_icon.svg")
+            ? (Utils.getArtwork(50, artist.artwork?.url) ?? "")
             : "",
-          props: { id: artist.id, inLibrary },
-        })
-      ) ?? []
-    );
-  }, [artists, fetchedArtists, inLibrary, showImages]);
-
-  // If accessing ArtistsView from the SearchView, and there is no data cached,
-  // 'isQueryLoading' will be true. To prevent an infinite loading screen in these
-  // cases, we'll check if we have any 'options'
-  const isLoading = !options.length && isQueryLoading;
-
-  const handleNearEndOfList = useCallback(() => {
-    if (!isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, isFetchingNextPage]);
-
-  const [scrollIndex, handleItemTap] = useScrollHandler(
-    "artists",
-    options,
-    undefined,
-    handleNearEndOfList
+          viewId: "albums",
+          props: { albums: artistAlbums, inLibrary: false },
+        };
+      }),
+    [data, showImages]
   );
 
-  return isAuthorized ? (
+  const [scrollIndex, handleItemTap] = useScrollHandler("artists", options);
+
+  return (
     <SelectableList
-      loading={isLoading}
-      loadingNextItems={isFetchingNextPage}
       options={options}
       activeIndex={scrollIndex}
-      emptyMessage="No saved artists"
+      emptyMessage="No artists"
       onItemTap={handleItemTap}
     />
-  ) : (
-    <AuthPrompt message="Sign in to view your artists" />
   );
 };
 

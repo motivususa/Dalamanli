@@ -129,6 +129,67 @@ export const MYSPACE_PLAYLIST: MediaApi.Playlist = {
   url: "",
 };
 
+/** Group tracks by genre */
+const GENRE_MAP: Record<string, string[]> = {
+  "Hip-Hop / Rap": [
+    "Busta Rhymes", "Drake", "E-40", "Fat Joe", "Federation",
+    "Hit My Cat Daddy - Young Sam", "Kanye West", "Lil Jon",
+    "Lil Wayne", "Ludacris", "T-Pain", "T.I.", "The Clipse",
+    "The Cool Kids", "The Pack", "The Ranger$", "YG",
+    "Stunnaman", "Far East Movement", "Shortie Like Mine",
+    "Swagga Like Us", "Miss Me, Kiss Me, Lick Me",
+  ],
+  "R&B": [
+    "B2K", "Cassie", "Chris Brown", "Ciara", "Omarion",
+    "NSYNC", "Never Let You Go", "Bria's Interlude",
+  ],
+  "Pop / Rock": [
+    "Avril Lavigne", "Blink 182", "Fall Out Boy",
+    "Foo Fighters", "Green Day", "Incubus", "Lit",
+    "Plain White T's", "Saliva", "Semisonic",
+    "Two Door Cinema Club", "My Chemical Romance",
+  ],
+  "Alternative / Indie": [
+    "Coldplay", "Decode", "MGMT", "Nirvana",
+    "Radiohead", "System of a Down", "Brand New",
+  ],
+  "Electronic / Dance": [
+    "Jamiroquai", "Black Eyed Peas",
+  ],
+  "Other": [],
+};
+
+export interface LocalGenre {
+  id: string;
+  name: string;
+  songs: MediaApi.Song[];
+}
+
+export const MYSPACE_GENRES: LocalGenre[] = (() => {
+  const result: LocalGenre[] = [];
+  const assigned = new Set<string>();
+
+  for (const [genre, artists] of Object.entries(GENRE_MAP)) {
+    if (genre === "Other") continue;
+    const songs = MYSPACE_TRACKS.filter(s => {
+      const a = s.artistName ?? "";
+      return artists.some(artist => a.toLowerCase().startsWith(artist.toLowerCase()));
+    });
+    if (songs.length > 0) {
+      songs.forEach(s => assigned.add(s.id));
+      result.push({ id: genre.toLowerCase().replace(/[^a-z0-9]/g, "-"), name: genre, songs });
+    }
+  }
+
+  // Catch-all for anything not matched
+  const other = MYSPACE_TRACKS.filter(s => !assigned.has(s.id));
+  if (other.length > 0) {
+    result.push({ id: "other", name: "Other", songs: other });
+  }
+
+  return result;
+})();
+
 /** Group tracks by artist for CoverFlow display */
 function buildAlbumsFromTracks(): MediaApi.Album[] {
   const byArtist = new Map<string, MediaApi.Song[]>();
@@ -156,3 +217,26 @@ function buildAlbumsFromTracks(): MediaApi.Album[] {
 }
 
 export const MYSPACE_ALBUMS = buildAlbumsFromTracks();
+
+/** Group tracks by artist */
+export const MYSPACE_ARTISTS: MediaApi.Artist[] = (() => {
+  const byArtist = new Map<string, MediaApi.Song[]>();
+  for (const song of MYSPACE_TRACKS) {
+    const key = song.artistName ?? "Unknown";
+    const existing = byArtist.get(key) ?? [];
+    existing.push(song);
+    byArtist.set(key, existing);
+  }
+  const artists: MediaApi.Artist[] = [];
+  let idx = 0;
+  for (const [artist, songs] of byArtist) {
+    artists.push({
+      id: `myspace-artist-${idx}`,
+      name: artist,
+      artwork: { url: songs[0]?.artwork?.url ?? DEFAULT_ARTWORK },
+      url: "",
+    });
+    idx++;
+  }
+  return artists.sort((a, b) => a.name.localeCompare(b.name));
+})();

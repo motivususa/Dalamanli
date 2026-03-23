@@ -9,6 +9,7 @@ import ArtistsView from "./ArtistsView";
 import BrickGameView from "./BrickGameView";
 import CoverFlowView from "./CoverFlowView";
 import GamesView from "./GamesView";
+import GenresView from "./GenresView";
 import HomeView from "./HomeView";
 import MusicView from "./MusicView";
 import NowPlayingView from "./NowPlayingView";
@@ -39,6 +40,7 @@ export type ViewProps = {
   playlists: { playlists?: MediaApi.Playlist[]; inLibrary?: boolean };
   playlist: { id: string; inLibrary?: boolean };
   search: { initialQuery?: string };
+  genres: undefined;
   brickGame: undefined;
   coverFlow: undefined;
 };
@@ -163,6 +165,13 @@ export const VIEW_REGISTRY = {
     title: "Search",
     preview: SplitScreenPreview.Music,
   } as ViewConfig<"search">,
+
+  genres: {
+    component: GenresView,
+    type: "full",
+    title: "Genres",
+    preview: SplitScreenPreview.Music,
+  } as ViewConfig<"genres">,
 
   brickGame: {
     component: BrickGameView,
