@@ -9,7 +9,7 @@ interface Props {
 }
 
 /** Synthesized click-wheel tick — no file needed, zero latency */
-function playClickWheelTick(volume = 0.3) {
+function playClickWheelTick(volume = 0.25) {
   try {
     const ctx = new (window.AudioContext ||
       (window as any).webkitAudioContext)();
@@ -29,15 +29,14 @@ function playClickWheelTick(volume = 0.3) {
     osc.start(ctx.currentTime);
     osc.stop(ctx.currentTime + 0.03);
 
-    // Auto-close context after sound finishes to avoid memory leaks
     setTimeout(() => ctx.close().catch(() => {}), 200);
   } catch {
     // Never break navigation
   }
 }
 
-/** Synthesized button click — slightly lower pitch than scroll tick */
-function playButtonClick(volume = 0.35) {
+/** Synthesized button click — lower pitch than scroll tick */
+function playButtonClick(volume = 0.32) {
   try {
     const ctx = new (window.AudioContext ||
       (window as any).webkitAudioContext)();
@@ -61,7 +60,7 @@ function playButtonClick(volume = 0.35) {
   } catch {}
 }
 
-/** Haptic feedback — light for scroll, medium for click */
+/** Haptic feedback */
 function vibrate(pattern: number | number[]) {
   try {
     if (navigator.vibrate) navigator.vibrate(pattern);
@@ -71,20 +70,26 @@ function vibrate(pattern: number | number[]) {
 export const SoundEffectsProvider = ({ children }: Props) => {
   const { soundsMuted } = useSettings();
   const soundsMutedRef = useRef(soundsMuted);
+  // Throttle scroll sound — min 80ms between ticks so rapid scrolling
+  // doesn't fire a cacophony of overlapping sounds
+  const lastScrollSoundRef = useRef(0);
 
-  // Keep ref in sync so event listeners don't stale-close over old value
   useEffect(() => {
     soundsMutedRef.current = soundsMuted;
   }, [soundsMuted]);
 
   const onScroll = useCallback(() => {
-    if (!soundsMutedRef.current) playClickWheelTick(0.3);
-    vibrate(8); // very short, light pulse
+    const now = Date.now();
+    if (now - lastScrollSoundRef.current < 80) return; // throttle
+    lastScrollSoundRef.current = now;
+
+    if (!soundsMutedRef.current) playClickWheelTick(0.25);
+    vibrate(8);
   }, []);
 
   const onClick = useCallback(() => {
-    if (!soundsMutedRef.current) playButtonClick(0.38);
-    vibrate([12, 0, 12]); // double-tap feel
+    if (!soundsMutedRef.current) playButtonClick(0.32);
+    vibrate([12, 0, 12]);
   }, []);
 
   useEffect(() => {

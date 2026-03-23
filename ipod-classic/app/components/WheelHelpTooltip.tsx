@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { Screen } from "@/utils/constants";
 
-const STORAGE_KEY = "ipod-help-seen";
+const STORAGE_KEY = "ipod-help-seen-v2"; // bumped version resets for all users
 const DISPLAY_MS = 5500;
 
 export const WheelHelpTooltip = () => {
@@ -35,10 +35,18 @@ export const WheelHelpTooltip = () => {
     };
   }, []);
 
+  const dismiss = useCallback(() => {
+    setExiting(true);
+    setTimeout(() => {
+      setVisible(false);
+      try { localStorage.setItem(STORAGE_KEY, "1"); } catch {}
+    }, 350);
+  }, []);
+
   if (!visible) return null;
 
   return (
-    <Overlay $exiting={exiting}>
+    <Overlay $exiting={exiting} onClick={dismiss}>
       <Card>
         {/* Animated mini wheel demo */}
         <WheelDemo>
