@@ -14,134 +14,69 @@ interface Props {
   children: React.ReactNode;
 }
 
-/** Haptic feedback */
+/** Haptic feedback — kept for Android Chrome support */
 function vibrate(pattern: number | number[]) {
   try { if (navigator.vibrate) navigator.vibrate(pattern); } catch {}
 }
 
-/**
- * Pre-decode an audio file into an AudioBuffer so it can be played
- * with zero latency via Web Audio API.
- */
-async function loadBuffer(
-  ctx: AudioContext,
-  url: string
-): Promise<AudioBuffer | null> {
-  try {
-    const res = await fetch(url);
-    const raw = await res.arrayBuffer();
-    return await ctx.decodeAudioData(raw);
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Play a pre-decoded AudioBuffer immediately.
- * Creates a new BufferSource each time (required by Web Audio spec).
- */
-function playBuffer(
-  ctx: AudioContext,
-  buf: AudioBuffer | null,
-  volume = 1.0
-) {
-  if (!buf) return;
-  try {
-    const gain = ctx.createGain();
-    gain.gain.value = volume;
-    gain.connect(ctx.destination);
-
-    const src = ctx.createBufferSource();
-    src.buffer = buf;
-    src.connect(gain);
-    src.start(0);
-  } catch {}
-}
-
 export const SoundEffectsProvider = ({ children }: Props) => {
   const { soundsMuted } = useSettings();
-  const soundsMutedRef  = useRef(soundsMuted);
-  const lastScrollRef   = useRef(0);
+  const soundsMutedRef = useRef(soundsMuted);
+  const lastScrollRef  = useRef(0);
 
-  // Single shared AudioContext — created lazily on first gesture
-  const audioCtxRef     = useRef<AudioContext | null>(null);
-  const bufForwardRef   = useRef<AudioBuffer | null>(null);
-  const bufBackwardRef  = useRef<AudioBuffer | null>(null);
-  const bufClickRef     = useRef<AudioBuffer | null>(null);
-
+  // Pre-create Audio elements once — reuse by resetting currentTime
+  const audioForward  = useRef<HTMLAudioElement | null>(null);
+  const audioBackward = useRef<HTMLAudioElement | null>(null);
+  const audioClick    = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     soundsMutedRef.current = soundsMuted;
   }, [soundsMuted]);
 
-  /**
-   * Create the AudioContext and decode all files on the first user gesture.
-   * Safari requires AudioContext to be created inside a user-gesture handler.
-   */
-  // Store the loading promise so concurrent calls all await the same one
-  const loadingPromiseRef = useRef<Promise<void> | null>(null);
+  // Initialise audio elements on mount (not inside gesture handlers)
+  useEffect(() => {
+    audioForward.current  = new Audio(SOUND_FORWARD);
+    audioBackward.current = new Audio(SOUND_BACKWARD);
+    audioClick.current    = new Audio(SOUND_CLICK);
 
-  const ensureLoaded = useCallback((): Promise<void> => {
-    if (loadingPromiseRef.current) return loadingPromiseRef.current;
-    loadingPromiseRef.current = (async () => {
+    audioForward.current.volume  = 0.6;
+    audioBackward.current.volume = 0.6;
+    audioClick.current.volume    = 0.75;
 
+    // Pre-load so Safari doesn't lazy-fetch on first play
+    audioForward.current.load();
+    audioBackward.current.load();
+    audioClick.current.load();
+  }, []);
+
+  const playAudio = useCallback((audio: HTMLAudioElement | null) => {
+    if (!audio || soundsMutedRef.current) return;
     try {
-      const AudioCtx =
-        window.AudioContext || (window as any).webkitAudioContext;
-      const ctx = new AudioCtx();
-      audioCtxRef.current = ctx;
-
-      // Resume if suspended (Safari sometimes starts suspended)
-      if (ctx.state === "suspended") await ctx.resume();
-
-      // Decode all three files in parallel
-      const [fwd, bwd, clk] = await Promise.all([
-        loadBuffer(ctx, SOUND_FORWARD),
-        loadBuffer(ctx, SOUND_BACKWARD),
-        loadBuffer(ctx, SOUND_CLICK),
-      ]);
-
-      bufForwardRef.current  = fwd;
-      bufBackwardRef.current = bwd;
-      bufClickRef.current    = clk;
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
     } catch {}
-    })();
-    return loadingPromiseRef.current!;
   }, []);
 
   const onForwardScroll = useCallback(() => {
     const now = Date.now();
     if (now - lastScrollRef.current < 80) return;
     lastScrollRef.current = now;
+    playAudio(audioForward.current);
     vibrate(8);
-    // ensureLoaded resolves instantly after first call
-    ensureLoaded().then(() => {
-      if (!soundsMutedRef.current && audioCtxRef.current) {
-        playBuffer(audioCtxRef.current, bufForwardRef.current, 0.6);
-      }
-    });
-  }, [ensureLoaded]);
+  }, [playAudio]);
 
   const onBackwardScroll = useCallback(() => {
     const now = Date.now();
     if (now - lastScrollRef.current < 80) return;
     lastScrollRef.current = now;
+    playAudio(audioBackward.current);
     vibrate(8);
-    ensureLoaded().then(() => {
-      if (!soundsMutedRef.current && audioCtxRef.current) {
-        playBuffer(audioCtxRef.current, bufBackwardRef.current, 0.6);
-      }
-    });
-  }, [ensureLoaded]);
+  }, [playAudio]);
 
   const onButtonClick = useCallback(() => {
+    playAudio(audioClick.current);
     vibrate([12, 0, 12]);
-    ensureLoaded().then(() => {
-      if (!soundsMutedRef.current && audioCtxRef.current) {
-        playBuffer(audioCtxRef.current, bufClickRef.current, 0.75);
-      }
-    });
-  }, [ensureLoaded]);
+  }, [playAudio]);
 
   useEffect(() => {
     const clickEvents: IpodEvent[] = [
