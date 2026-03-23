@@ -17,6 +17,17 @@ export const GlobalStyles = createGlobalStyle`
     ${Screen.XS.MediaQuery} {
       min-height: 480px;
     }
+
+    /* Mobile: let iPod scale naturally, center it, allow scroll */
+    @media (max-width: 576px) {
+      height: auto;
+      min-height: 100dvh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 16px 0;
+      overflow: auto;
+    }
   }
 
   a {

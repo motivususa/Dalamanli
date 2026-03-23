@@ -23,10 +23,14 @@ export const Shell = styled.div<{ $deviceTheme: DeviceThemeName }>`
 
   ${Screen.SM.MediaQuery} {
     animation: none;
-    width: 100vw;
-    max-height: unset;
-    border-radius: 0;
+    /* Scale the whole iPod shell to fit mobile viewport without stretching */
+    width: 370px;
+    max-height: 37em;
+    border-radius: 30px;
     -webkit-box-reflect: unset;
+    transform-origin: top center;
+    transform: scale(var(--ipod-mobile-scale, 0.82));
+    margin-top: calc((var(--ipod-mobile-scale, 0.82) - 1) * 37em / 2);
   }
 
   @keyframes descend {
