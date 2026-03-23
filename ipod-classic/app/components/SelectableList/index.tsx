@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import { LoadingIndicator, LoadingScreen } from "@/components";
 import ErrorScreen from "@/components/ErrorScreen";
@@ -6,7 +6,6 @@ import { SplitScreenPreview } from "@/components/previews";
 import { ViewId, ViewProps } from "@/components/views/registry";
 import { PopupId, ActionSheetId } from "@/providers/ViewContextProvider";
 import { AnimatePresence, motion } from "framer-motion";
-import { useTimeout } from "@/hooks";
 import styled from "styled-components";
 
 import SelectableListItem from "./SelectableListItem";
@@ -122,9 +121,6 @@ const SelectableList = ({
   onItemTap,
 }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useTimeout(() => setIsMounted(true), 350);
 
   const fullOptions = useMemo(
     () => [
@@ -145,15 +141,37 @@ const SelectableList = ({
 
   /** Always make sure the selected item is within the screen's view. */
   useEffect(() => {
-    if (isMounted && containerRef.current && fullOptions.length) {
-      const { children } = containerRef.current;
-      if (loadingNextItems) {
-        children[activeIndex + 1]?.scrollIntoView({ block: "nearest" });
-      } else {
-        children[activeIndex]?.scrollIntoView({ block: "nearest" });
-      }
+    if (!containerRef.current || !fullOptions.length) return;
+
+    const container = containerRef.current;
+    const targetIndex = loadingNextItems ? activeIndex + 1 : activeIndex;
+    const child = container.children[targetIndex] as HTMLElement | undefined;
+    if (!child) return;
+
+    // Find the nearest scrollable ancestor (ContentTransitionContainer)
+    // We walk up because the container itself has no fixed height.
+    // We also set scrollTop directly instead of scrollIntoView because
+    // scrollIntoView fails on elements that are translated off-screen
+    // (when isHidden=true and the view is behind nowPlaying).
+    let scroller: HTMLElement | null = container.parentElement;
+    while (scroller) {
+      const style = window.getComputedStyle(scroller);
+      if (style.overflow === 'auto' || style.overflowY === 'auto') break;
+      scroller = scroller.parentElement;
     }
-  }, [activeIndex, isMounted, fullOptions.length, loadingNextItems]);
+    if (!scroller) return;
+
+    const itemTop = child.offsetTop;
+    const itemBottom = itemTop + child.offsetHeight;
+    const viewTop = scroller.scrollTop;
+    const viewBottom = viewTop + scroller.clientHeight;
+
+    if (itemTop < viewTop) {
+      scroller.scrollTop = itemTop;
+    } else if (itemBottom > viewBottom) {
+      scroller.scrollTop = itemBottom - scroller.clientHeight;
+    }
+  }, [activeIndex, fullOptions.length, loadingNextItems]);
 
   return (
     <AnimatePresence>
