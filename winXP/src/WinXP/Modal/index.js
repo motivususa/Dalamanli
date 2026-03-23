@@ -35,7 +35,7 @@ const Container = ({ className, children }) => {
     </div>
   );
 };
-const Menu = ({ mode, onClose, onClickButton }) => {
+const Menu = ({ mode, onClose, onClickButton, winXpSignedIn }) => {
   function renderButtons() {
     if (mode === POWER_STATE.TURN_OFF) {
       return (
@@ -59,14 +59,19 @@ const Menu = ({ mode, onClose, onClickButton }) => {
           style={{ border: '1px solid #fff', borderRadius: '3px' }}
           onClick={onClickButton}
         />
-        <Button img={lock} text="Log Off" onClick={onClickButton} />
+        <Button
+          img={lock}
+          text={winXpSignedIn ? 'Log Off' : 'Sign In'}
+          onClick={onClickButton}
+        />
       </>
     );
   }
+  const logOffHeader = winXpSignedIn ? 'Log Off Windows' : 'Sign in to Windows';
   return (
     <div className="modal">
       <header className="header">
-        <span className="header__text">Log Off Windows</span>
+        <span className="header__text">{logOffHeader}</span>
         <img src={windowsLogo} alt="" className="header__img" />
       </header>
       <div className="content">{renderButtons()}</div>
@@ -108,6 +113,7 @@ const StyledContainer = styled(Container)`
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 2147483050;
   display: flex;
   justify-content: center;
   .modal {

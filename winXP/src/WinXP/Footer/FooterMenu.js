@@ -8,6 +8,7 @@ import setAccess from '../../assets/windowsIcons/227(32x32).png';
 import outlook from '../../assets/windowsIcons/887(32x32).png';
 import mediaPlayer from '../../assets/windowsIcons/846(32x32).png';
 import messenger from '../../assets/windowsIcons/msn.png';
+const ipodIcon = `${process.env.PUBLIC_URL || ''}/ipod.png`;
 import documents from '../../assets/windowsIcons/308(32x32).png';
 import recentDocuments from '../../assets/windowsIcons/301(32x32).png';
 import pictures from '../../assets/windowsIcons/307(32x32).png';
@@ -30,7 +31,7 @@ import empty from '../../assets/empty.png';
 
 import { AllPrograms, ConnectTo, MyRecentDocuments } from './FooterMenuData';
 
-function FooterMenu({ className, onClick }) {
+function FooterMenu({ className, onClick, winXpSignedIn }) {
   const [hovering, setHovering] = useState('');
   function onMouseOver(e) {
     const item = e.target.closest('.menu__item');
@@ -61,7 +62,7 @@ function FooterMenu({ className, onClick }) {
               { icon: winamp, text: 'Winamp' },
               { icon: paint, text: 'Paint' },
               { icon: mediaPlayer, text: 'Windows Media Player' },
-              { icon: messenger, text: 'Windows Messenger' },
+              { icon: ipodIcon, text: 'iPod' },
             ]}
           />
           <div style={{ flex: 1 }} />
@@ -175,9 +176,12 @@ function FooterMenu({ className, onClick }) {
         </div>
       </section>
       <footer>
-        <div className="footer__item" onClick={() => onClick('Log Off')}>
+        <div
+          className="footer__item"
+          onClick={() => onClick(winXpSignedIn ? 'Log Off' : 'Sign In')}
+        >
           <img className="footer__item__img" src={lock} alt="" />
-          <span>Log Off</span>
+          <span>{winXpSignedIn ? 'Log Off' : 'Sign In'}</span>
         </div>
         <div
           className="footer__item"

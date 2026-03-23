@@ -1,4 +1,4 @@
-import React, { useRef, memo, useState } from 'react';
+import React, { useRef, memo, useState, useEffect } from 'react';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import styled, { keyframes } from 'styled-components';
 
@@ -13,6 +13,7 @@ function Windows({
   onMaximize,
   focusedAppId,
   openApp,
+  openErrorDialog,
 }) {
   return (
     <div style={{ position: 'relative', zIndex: 0 }}>
@@ -27,6 +28,7 @@ function Windows({
           onMouseUpMaximize={onMaximize}
           isFocus={focusedAppId === app.id} // for styledWindow
           openApp={openApp}
+          openErrorDialog={openErrorDialog}
           {...app}
         />
       ))}
@@ -51,9 +53,18 @@ const Window = memo(function({
   isFocus,
   className,
   openApp,
+  openErrorDialog,
+  shakeNonce,
 }) {
   const [shake, setShake] = useState(false);
   const [showCloseHint, setShowCloseHint] = useState(false);
+
+  useEffect(() => {
+    if (!shakeNonce) return;
+    setShake(true);
+    const t = setTimeout(() => setShake(false), 420);
+    return () => clearTimeout(t);
+  }, [shakeNonce]);
 
   function _onMouseDown() {
     onMouseDown(id);
@@ -149,10 +160,11 @@ const Window = memo(function({
           onForceClose: () => onMouseUpClose(id),
           onMinimize: _onMouseUpMinimize,
           isFocus,
-          openApp,
           showCloseHint,
           closeHint: injectProps?.closeHint,
           ...injectProps,
+          openApp,
+          openErrorDialog,
         })}
         </div>
       </div>

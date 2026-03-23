@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
+import { WINXP_LOGON_PROFILE_PHOTO_EVENT } from '../../constants/profilePhoto';
 import './webCamViewer.css';
 
 function clamp(v) {
@@ -345,6 +346,17 @@ function WebCamViewer() {
     a.click();
   }, [lightbox]);
 
+  const sendPhotoToSignUp = useCallback(() => {
+    if (!lightbox) return;
+    window.dispatchEvent(
+      new CustomEvent(WINXP_LOGON_PROFILE_PHOTO_EVENT, {
+        detail: { dataUrl: lightbox.url },
+      }),
+    );
+    setLightbox(null);
+    setStatusMsg('Photo sent to Sign Up form');
+  }, [lightbox]);
+
   return (
     <div className="wcv-root">
       <div className="wcv-menu-bar">
@@ -498,9 +510,15 @@ function WebCamViewer() {
         role="presentation"
       >
         {lightbox && (
-          <div className="wcv-lb-window">
+          <div
+            className="wcv-lb-window"
+            onClick={e => e.stopPropagation()}
+            onKeyDown={e => e.stopPropagation()}
+            role="dialog"
+            aria-labelledby="wcv-lb-title"
+          >
             <div className="wcv-lb-titlebar">
-              <span>Photo Preview</span>
+              <span id="wcv-lb-title">Photo Preview</span>
               <button
                 type="button"
                 className="wcv-lb-close-btn"
@@ -512,6 +530,13 @@ function WebCamViewer() {
             <div className="wcv-lb-body">
               <img src={lightbox.url} alt="" />
               <div className="wcv-lb-actions">
+                <button
+                  type="button"
+                  className="wcv-xp-btn wcv-xp-btn--primary-lite"
+                  onClick={sendPhotoToSignUp}
+                >
+                  Use for sign-up
+                </button>
                 <button
                   type="button"
                   className="wcv-xp-btn"

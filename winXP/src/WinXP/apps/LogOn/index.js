@@ -1,5 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
+
+import { WINXP_LOGON_PROFILE_PHOTO_EVENT } from '../../constants/profilePhoto';
+import { setWinXpSignedIn } from '../../constants/session';
 
 const signupWindow = `${process.env.PUBLIC_URL}/retro-popups/assets/signup-window.png`;
 const defaultPfp = `${process.env.PUBLIC_URL}/retro-popups/assets/default-pfp.jpg`;
@@ -9,6 +12,18 @@ function LogOn({ onClose, openApp }) {
   const [form, setForm] = useState({ name: '', username: '', email: '', password: '', confirmPassword: '' });
   const [pfpPreview, setPfpPreview] = useState(defaultPfp);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    function onProfilePhotoFromWebcam(e) {
+      const url = e.detail?.dataUrl;
+      if (typeof url === 'string' && url.startsWith('data:image/')) {
+        setPfpPreview(url);
+      }
+    }
+    window.addEventListener(WINXP_LOGON_PROFILE_PHOTO_EVENT, onProfilePhotoFromWebcam);
+    return () =>
+      window.removeEventListener(WINXP_LOGON_PROFILE_PHOTO_EVENT, onProfilePhotoFromWebcam);
+  }, []);
 
   const set = field => e => setForm(f => ({ ...f, [field]: e.target.value }));
 
@@ -23,7 +38,9 @@ function LogOn({ onClose, openApp }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // Supabase auth will hook in here later
+    // Supabase auth will hook in here later; local session for WinXP UI state
+    setWinXpSignedIn();
+    window.dispatchEvent(new CustomEvent('winxp-session-changed'));
     onClose();
   }
 
@@ -122,21 +139,60 @@ function LogOn({ onClose, openApp }) {
                   autoComplete="new-password"
                 />
               </div>
+              <div className="password-footnote-row">
+                <div className="password-footnote-spacer" aria-hidden="true" />
+                <p className="password-footnote" role="note">
+                  <span className="password-footnote__mark">*</span>
+                  Write down your password or keep it somewhere safe.{' '}
+                  <strong>Forgot password</strong> is not available—we can&apos;t recover
+                  your account if you lose it.
+                </p>
+              </div>
               <div className="field-row field-row--pfp">
                 <label><u>P</u>rofile <u>p</u>icture:</label>
-                <label className="pfp-upload">
-                  <div className="pfp-preview" onClick={() => fileInputRef.current?.click()}>
-                    <img src={pfpPreview} alt="Profile" />
+                <div className="pfp-column">
+                  <div className="pfp-preview-row">
+                    <button
+                      type="button"
+                      className="pfp-preview"
+                      onClick={() => fileInputRef.current?.click()}
+                      aria-label="Choose profile picture file"
+                    >
+                      <img src={pfpPreview} alt="Profile preview" />
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePfpChange}
+                      style={{ display: 'none' }}
+                    />
                   </div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePfpChange}
-                    style={{ display: 'none' }}
-                  />
-                  <span className="pfp-hint">Click to upload</span>
-                </label>
+                  <p className="pfp-copy">
+                    Upload an image from your computer, or take one in{' '}
+                    <strong>WebCam Viewer</strong>.
+                  </p>
+                  <div className="pfp-btns">
+                    <button
+                      type="button"
+                      className="xp-btn xp-btn--compact"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      Browse…
+                    </button>
+                    <button
+                      type="button"
+                      className="xp-btn xp-btn--compact"
+                      onClick={() => openApp && openApp('WebCam Viewer')}
+                    >
+                      Use webcam…
+                    </button>
+                  </div>
+                  <p className="pfp-webcam-steps" role="note">
+                    WebCam: connect → <strong>Capture</strong> → click the photo →{' '}
+                    <strong>Use for sign-up</strong>.
+                  </p>
+                </div>
               </div>
             </>
           )}
@@ -152,9 +208,15 @@ function LogOn({ onClose, openApp }) {
               >
                 About
               </button>
-              <button type="button" className="xp-btn" onClick={onClose}>
-                Login
-              </button>
+              {mode === 'login' ? (
+                <button type="submit" className="xp-btn">
+                  Login
+                </button>
+              ) : (
+                <button type="submit" className="xp-btn">
+                  Create account
+                </button>
+              )}
               {mode === 'login' ? (
                 <button
                   type="button"
@@ -219,10 +281,12 @@ const Div = styled.div`
     align-items: center;
     margin-bottom: 8px;
     label {
+      flex: 0 0 auto;
       width: 100px;
       text-align: right;
       padding-right: 8px;
       white-space: nowrap;
+      box-sizing: content-box;
     }
     input {
       flex: 1;
@@ -238,31 +302,90 @@ const Div = styled.div`
     }
     &--pfp {
       align-items: flex-start;
-      .pfp-upload {
+      .pfp-column {
         flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .pfp-preview-row {
         display: flex;
         align-items: center;
-        gap: 10px;
-        cursor: pointer;
       }
       .pfp-preview {
         width: 48px;
         height: 48px;
+        padding: 0;
         border: 1px solid #7f9db9;
         background: #fcfcfe;
         overflow: hidden;
         flex-shrink: 0;
+        cursor: pointer;
+        display: block;
+        &:focus {
+          outline: 1px solid #316ac5;
+        }
         img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          display: block;
+          pointer-events: none;
         }
       }
-      .pfp-hint {
+      .pfp-copy,
+      .pfp-webcam-steps {
+        margin: 0;
         font-size: 10px;
+        line-height: 1.4;
+        color: #444;
+      }
+      .pfp-webcam-steps {
         color: #555;
+        padding: 4px 6px;
+        background: #f0eee6;
+        border: 1px solid #d4d0c8;
+      }
+      .pfp-btns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
       }
     }
+  }
+
+  /* Same flex geometry as .field-row → matches input & .pfp-column width exactly */
+  .password-footnote-row {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 10px;
+  }
+  .password-footnote-spacer {
+    flex: 0 0 auto;
+    width: 100px;
+    padding-right: 8px;
+    box-sizing: content-box;
+  }
+  .password-footnote {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: 10px;
+    line-height: 1.45;
+    color: #4a4a4a;
+    box-sizing: border-box;
+    padding: 6px 8px;
+    text-align: left;
+    text-wrap: pretty;
+    background: #f7f5ef;
+    border: 1px solid #d4d0c8;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+  .password-footnote__mark {
+    color: #8b0000;
+    font-weight: bold;
+    margin-right: 2px;
   }
 
   /* ── Buttons (AIM messenger style) ── */
@@ -285,6 +408,12 @@ const Div = styled.div`
   .btn-group {
     display: flex;
     gap: 6px;
+  }
+  .xp-btn--compact {
+    min-width: 0;
+    height: 21px;
+    font-size: 10px;
+    padding: 0 8px;
   }
   .xp-btn {
     min-width: 72px;

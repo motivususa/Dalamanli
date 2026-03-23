@@ -27,14 +27,27 @@ import instagramLogo from '../../../assets/instagram-logo.png';
 import twitterLogo from '../../../assets/twitter-logo.png';
 import itunesLogo from '../../../assets/itunes-logo.jpg';
 const usbVideoDeviceIcon = `${process.env.PUBLIC_URL || ''}/usb-video-device.svg`;
+const mpPlayerIcon = `${process.env.PUBLIC_URL || ''}/mp-player.png`;
 const socialLogos = {
   tiktok: `${process.env.PUBLIC_URL || ''}/social-logos/tiktok-logo.svg`,
   youtube: `${process.env.PUBLIC_URL || ''}/social-logos/youtube-logo.svg`,
   discord: `${process.env.PUBLIC_URL || ''}/social-logos/discord-logo.svg`,
   letterboxd: `${process.env.PUBLIC_URL || ''}/social-logos/letterboxd-logo.svg`,
 };
+const businessLogos = `${process.env.PUBLIC_URL || ''}/business-logos`;
 /* Named target reuses same tab—prevents multiple tabs from opening on one click */
 const EXTERNAL_TARGET = 'winxp_external';
+
+function openIpodClassicFromMyComputer() {
+  try {
+    sessionStorage.removeItem('winxp-disclaimer-accepted');
+    sessionStorage.removeItem('winxp-boot-complete');
+  } catch (e) {
+    /* ignore */
+  }
+  const prefix = (process.env.PUBLIC_URL || '').replace(/\/$/, '');
+  window.location.assign(`${prefix}/ipod/`);
+}
 
 function MyComputer({ onClose, openApp }) {
   function onClickOptionItem(item) {
@@ -324,6 +337,79 @@ function MyComputer({ onClose, openApp }) {
                     USB Video Device
                   </div>
                 </div>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="com__content__right__card__item com__content__right__card__item--usb-video"
+                  onClick={openIpodClassicFromMyComputer}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openIpodClassicFromMyComputer();
+                    }
+                  }}
+                >
+                  <div className="com__content__right__card__img-container">
+                    <img
+                      src={mpPlayerIcon}
+                      alt=""
+                      className="com__content__right__card__img com__content__right__card__img--usb-video"
+                    />
+                  </div>
+                  <div className="com__content__right__card__text com__content__right__card__text--device-long">
+                    Apple Mobile Device USB Driver (iPod)
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="com__content__right__card com__content__right__card--me">
+              <div className="com__content__right__card__header">
+                Businesses
+              </div>
+              <div className="com__content__right__card__content">
+                <a
+                  href="https://trendsetters.me"
+                  target={EXTERNAL_TARGET}
+                  rel="noreferrer"
+                  className="com__content__right__card__item--me"
+                >
+                  <img
+                    className="com__content__right__card__img"
+                    src={`${businessLogos}/trendsetters-logo.png`}
+                    alt="TREND$ETTER$"
+                  />
+                  <div className="com__content__right__card__text">
+                    TREND$ETTER$
+                  </div>
+                </a>
+                <a
+                  href="https://opaius.com"
+                  target={EXTERNAL_TARGET}
+                  rel="noreferrer"
+                  className="com__content__right__card__item--me"
+                >
+                  <img
+                    className="com__content__right__card__img"
+                    src={`${businessLogos}/opaius-logo.png`}
+                    alt="Opaius"
+                  />
+                  <div className="com__content__right__card__text">Opaius</div>
+                </a>
+                <a
+                  href="https://a.co/d/4UPegIl"
+                  target={EXTERNAL_TARGET}
+                  rel="noreferrer"
+                  className="com__content__right__card__item--me"
+                >
+                  <img
+                    className="com__content__right__card__img"
+                    src={`${businessLogos}/captain-cypher.png`}
+                    alt="Captain Cypher"
+                  />
+                  <div className="com__content__right__card__text">
+                    Captain Cypher
+                  </div>
+                </a>
               </div>
             </div>
             <div className="com__content__right__card com__content__right__card--me">
@@ -331,6 +417,10 @@ function MyComputer({ onClose, openApp }) {
                 Social Media
               </div>
               <div className="com__content__right__card__content">
+                <a href="mailto:hello@dalamanli.com" className="com__content__right__card__item--me">
+                  <img className="com__content__right__card__img" src={`${process.env.PUBLIC_URL || ''}/social-logos/email-logo.png`} alt="Email" />
+                  <div className="com__content__right__card__text">Contact Me</div>
+                </a>
                 <a href="https://instagram.com/kayadalamanli/" target="winxp_external" rel="noreferrer" className="com__content__right__card__item--me">
                   <img className="com__content__right__card__img" src={instagramLogo} alt="Instagram" />
                   <div className="com__content__right__card__text">Instagram</div>
@@ -358,6 +448,10 @@ function MyComputer({ onClose, openApp }) {
                 <a href="https://boxd.it/5mNsX" target="winxp_external" rel="noreferrer" className="com__content__right__card__item--me">
                   <img className="com__content__right__card__img" src={`${process.env.PUBLIC_URL || ''}/social-logos/letterboxd-logo.svg`} alt="Letterboxd" />
                   <div className="com__content__right__card__text">Letterboxd</div>
+                </a>
+                <a href="https://www.linkedin.com/in/kayawesley/" target="winxp_external" rel="noreferrer" className="com__content__right__card__item--me">
+                  <img className="com__content__right__card__img" src={`${process.env.PUBLIC_URL || ''}/social-logos/linked-in-logo.png`} alt="LinkedIn" />
+                  <div className="com__content__right__card__text">LinkedIn</div>
                 </a>
               </div>
             </div>
@@ -728,6 +822,11 @@ const Div = styled.div`
   }
   .com__content__right__card__img--usb-video {
     object-fit: contain;
+  }
+  .com__content__right__card__text--device-long {
+    white-space: normal;
+    line-height: 1.25;
+    max-width: 148px;
   }
   .com__content__right__card__img {
     width: 45px;

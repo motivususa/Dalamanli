@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+
+import { isWinXpSignedIn } from '../../WinXP/constants/session';
 import './myspace.css';
 import MySpaceMusicPlayer from './MySpaceMusicPlayer';
 
@@ -6,7 +8,7 @@ const USER_NAME = 'Kaya Wesley';
 const FRIENDS = [
   { name: 'Tom', img: 'tom.jpg' },
   { name: '𝓯𝓻𝓲𝓳𝓸𝓵', img: 'frijol.jpg' },
-  { name: '❤꧁ღ⊱♥ Tia ♥⊱ღ꧂❤', img: 'jale.jpg' },
+  { name: '❤꧁ღ⊱♥ Tia ♥⊱ღ꧂❤', img: 'tia.jpg' },
   { name: 'ｓｈｕｇｉ　ホ央維', img: 'shugi.JPEG' },
   { name: '𝕽𝕽𝕵', img: 'RRJ.png' },
   { name: '𝕕✫𝕧𝕖', img: 'dave.jpg' },
@@ -123,7 +125,7 @@ const SEARCH_TABS = [
   { id: 'tblog', label: 'Blogs' },
 ];
 
-function MySpace({ openApp }) {
+function MySpace({ openApp, openErrorDialog }) {
   const [navOpen, setNavOpen] = useState(false);
   const [searchTab, setSearchTab] = useState('tms');
   const [comments, setComments] = useState([]);
@@ -150,6 +152,13 @@ function MySpace({ openApp }) {
   function submitComment(e) {
     e.preventDefault();
     if (!commentBody.trim()) return;
+    if (!isWinXpSignedIn()) {
+      openErrorDialog?.(
+        "Oh oh! You're not signed in or haven't signed up yet.",
+        'MySpace',
+      );
+      return;
+    }
     const date = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     setComments(prev => [...prev, { name: commentName.trim() || 'Anonymous', body: commentBody, date }]);
     setCommentBody('');

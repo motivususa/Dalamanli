@@ -1,6 +1,7 @@
 export const ADD_APP = 'ADD_APP';
 export const DEL_APP = 'DEL_APP';
 export const FOCUS_APP = 'FOCUS_APP';
+export const FOCUS_AND_SHAKE_APP = 'FOCUS_AND_SHAKE_APP';
 export const MINIMIZE_APP = 'MINIMIZE_APP';
 export const TOGGLE_MAXIMIZE_APP = 'TOGGLE_MAXIMIZE_APP';
 export const FOCUS_ICON = 'FOCUS_ICON';

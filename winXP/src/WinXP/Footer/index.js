@@ -33,6 +33,7 @@ function Footer({
   focusedAppId,
   onMouseDown,
   onClickMenuItem,
+  winXpSignedIn,
 }) {
   function openAIM(e) {
     e.stopPropagation();
@@ -73,7 +74,9 @@ function Footer({
     <Container onMouseDown={_onMouseDown}>
       <div className="footer__items left">
         <div ref={menu} className="footer__start__menu">
-          {menuOn && <FooterMenu onClick={_onClickMenuItem} />}
+          {menuOn && (
+            <FooterMenu onClick={_onClickMenuItem} winXpSignedIn={winXpSignedIn} />
+          )}
         </div>
         <img
           src={startButton}

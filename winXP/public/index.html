@@ -8,19 +8,188 @@
     <meta name="description" content="Home Computer - Dalamanli" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="theme-color" content="#fff" />
+    <meta name="theme-color" content="#1a1a1a" />
+    <link rel="preload" href="%PUBLIC_URL%/boot.mp4" as="video" type="video/mp4" />
+    <link rel="preload" href="%PUBLIC_URL%/startup.mp3" as="audio" type="audio/mpeg" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.ico" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!-- MySpace music player (myspace-music-player-extended) -->
     <link rel="stylesheet" href="%PUBLIC_URL%/myspace/myspace-music-player-extended/css/fonts.css" />
     <link rel="stylesheet" href="%PUBLIC_URL%/myspace/myspace-music-player-extended/css/app.css" />
     <script src="%PUBLIC_URL%/myspace/myspace-music-player-extended/js/amplitude.js"></script>
     <title>Home Computer - Dalamanli</title>
+
+    <style>
+      html, body, #root { height: 100%; margin: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        color: #000;
+        background: #000;
+      }
+      @media (prefers-color-scheme: dark) {
+        body { background: #000; }
+      }
+      html.winxp-landing-dismissed #landing-gate { display: none !important; }
+
+      *, *::before, *::after { box-sizing: border-box; }
+
+      #landing-gate {
+        position: fixed; inset: 0; z-index: 2147483647;
+        background: #FCFCFC;
+        transition: background 0.4s ease;
+      }
+      @media (prefers-color-scheme: dark) {
+        #landing-gate { background: #3F4249; }
+      }
+      #ipod-frame {
+        width: 100%; height: 100%; border: none; display: block;
+      }
+
+      /* ── XP warning dialog overlay ── */
+      .xp-overlay {
+        display: none; position: fixed; inset: 0; z-index: 2147483640;
+        align-items: center; justify-content: center;
+        padding: 16px;
+        background: rgba(0,0,0,0.5);
+      }
+      .xp-overlay.is-open { display: flex; }
+      .xp-dialog {
+        width: min(380px, calc(100vw - 32px));
+        background: #ece9d8;
+        border: 1px solid #003c74;
+        border-radius: 8px 8px 0 0;
+        box-shadow: 4px 4px 16px rgba(0,0,0,0.5);
+        overflow: hidden;
+        font-family: Tahoma, 'Segoe UI', sans-serif;
+      }
+      .xp-dialog-title {
+        background: linear-gradient(to bottom, #0997ff 0%, #0055eb 8%, #0050e3 40%, #06f 88%, #06f 93%, #0055e2 95%, #0055e2 100%);
+        color: #fff; font-size: 13px; font-weight: 700;
+        padding: 4px 8px 5px;
+        text-shadow: 1px 1px #000;
+        border-bottom: 1px solid #00156a;
+      }
+      .xp-dialog-body {
+        padding: 14px 16px 16px;
+        font-size: 12px; line-height: 1.5; color: #000;
+        border-bottom: 1px solid #aca899;
+      }
+      .xp-dialog-actions {
+        padding: 10px 12px 12px;
+        display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end;
+      }
+      .xp-btn {
+        min-width: 110px; padding: 4px 16px;
+        font-family: Tahoma, sans-serif; font-size: 11px;
+        cursor: pointer; background: #ece9d8;
+        border: 1px solid; border-color: #fff #0a246a #0a246a #fff;
+        outline: 1px solid #aca899; outline-offset: -2px;
+      }
+      .xp-btn:hover { background: #dee8f4; }
+      .xp-btn:active { border-color: #0a246a #fff #fff #0a246a; }
+    </style>
+
+    <script>
+      (function () {
+        try {
+          if (sessionStorage.getItem('winxp-disclaimer-accepted') === '1') {
+            document.documentElement.classList.add('winxp-landing-dismissed');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
+
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="landing-gate" role="dialog" aria-modal="true">
+      <iframe id="ipod-frame" src="/ipod/" allow="autoplay" title="iPod Classic"></iframe>
+
+      <!-- XP warning dialog (on top of iframe) -->
+      <div class="xp-overlay" id="xp-overlay" hidden aria-hidden="true">
+        <div class="xp-dialog" role="alertdialog" aria-labelledby="xp-title" aria-describedby="xp-body">
+          <div class="xp-dialog-title" id="xp-title">Windows XP Desktop</div>
+          <div class="xp-dialog-body" id="xp-body">
+            This experience is designed for desktop or laptop screens.
+            Precise mouse control and a large display are recommended
+            for the full experience.<br><br>
+            <em style="color:#555;font-size:11px">An intro video will play. Nothing is being installed during this experience.</em>
+          </div>
+          <div class="xp-dialog-actions">
+            <button type="button" class="xp-btn" id="xp-continue">Continue Anyway</button>
+            <button type="button" class="xp-btn" id="xp-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <noscript>
+      <style>#landing-gate { display: none !important; }</style>
+      <div style="min-height:100vh;padding:24px;font-family:Tahoma,sans-serif;background:#0d0d0f;color:#e8eef8">
+        <p style="max-width:520px;line-height:1.5">JavaScript is required. You can still visit these links:</p>
+        <ul style="max-width:520px;line-height:1.8">
+          <li><a href="https://instagram.com/kayadalamanli/">Instagram</a></li>
+          <li><a href="https://tiktok.com/@kayadalamanli">TikTok</a></li>
+          <li><a href="https://twitter.com/kayadalamanli">Twitter / X</a></li>
+          <li><a href="https://youtube.com/@kayadalamanli">YouTube</a></li>
+          <li><a href="https://opaius.com">Opaius</a></li>
+          <li><a href="https://trendsetters.me">Trendsetters</a></li>
+        </ul>
+      </div>
+    </noscript>
+
     <div id="root"></div>
+
+    <script>
+      (function () {
+        var STORAGE = 'winxp-disclaimer-accepted';
+        var EVENT = 'winxp-disclaimer-accepted';
+
+        function dismissLanding() {
+          var g = document.getElementById('landing-gate');
+          document.documentElement.classList.add('winxp-landing-dismissed');
+          if (g) { g.hidden = true; g.setAttribute('aria-hidden', 'true'); }
+        }
+        function acceptAndDismiss() {
+          try {
+            sessionStorage.setItem(STORAGE, '1');
+            sessionStorage.removeItem('winxp-boot-complete');
+          } catch(e) {}
+          closeXpDialog();
+          dismissLanding();
+          window.dispatchEvent(new CustomEvent(EVENT));
+        }
+
+        /* ── XP dialog ── */
+        var overlay = document.getElementById('xp-overlay');
+        function openXpDialog() {
+          if (!overlay) return;
+          overlay.hidden = false; overlay.classList.add('is-open');
+          overlay.setAttribute('aria-hidden', 'false');
+        }
+        function closeXpDialog() {
+          if (!overlay) return;
+          overlay.hidden = true; overlay.classList.remove('is-open');
+          overlay.setAttribute('aria-hidden', 'true');
+        }
+        var xpContinue = document.getElementById('xp-continue');
+        var xpCancel = document.getElementById('xp-cancel');
+        if (xpContinue) xpContinue.addEventListener('click', acceptAndDismiss);
+        if (xpCancel) xpCancel.addEventListener('click', closeXpDialog);
+
+        /* ── Listen for postMessage from iPod iframe ── */
+        window.addEventListener('message', function(e) {
+          if (e.data && e.data.type === 'enter-xp') {
+            openXpDialog();
+          }
+        });
+
+        /* ── Session check ── */
+        try {
+          if (sessionStorage.getItem(STORAGE) === '1') dismissLanding();
+        } catch(e) {}
+      })();
+    </script>
+
     <script src="%PUBLIC_URL%/retro-popups/popups.js"></script>
     <script>RetroPopups.init();</script>
   </body>

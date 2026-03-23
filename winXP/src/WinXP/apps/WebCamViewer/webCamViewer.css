@@ -471,5 +471,13 @@
 
 .wcv-lb-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.wcv-xp-btn--primary-lite {
+  background: linear-gradient(to bottom, #f0eedf 0%, #dedad0 100%);
+  font-weight: bold;
 }

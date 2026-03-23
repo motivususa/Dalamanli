@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useCallback } from 'react';
+import React, { useReducer, useRef, useCallback, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import useMouse from 'react-use/lib/useMouse';
 
@@ -6,6 +6,7 @@ import {
   ADD_APP,
   DEL_APP,
   FOCUS_APP,
+  FOCUS_AND_SHAKE_APP,
   MINIMIZE_APP,
   TOGGLE_MAXIMIZE_APP,
   FOCUS_ICON,
@@ -21,12 +22,20 @@ import {
 } from './constants/actions';
 import { FOCUSING, POWER_STATE } from './constants';
 import { defaultIconState, defaultAppState, appSettings } from './apps';
+import LogOnComponent from './apps/LogOn';
+import {
+  isWinXpSignedIn,
+  clearWinXpSignedIn,
+} from './constants/session';
 import Modal from './Modal';
 import ShutdownOverlay from './ShutdownOverlay';
 import Footer from './Footer';
 import Windows from './Windows';
 import Icons from './Icons';
 import { DashedBox } from '../components';
+import AquariumScreensaver from './AquariumScreensaver';
+
+const IDLE_SCREENSAVER_MS = 4 * 60 * 1000;
 
 const initState = {
   apps: defaultAppState,
@@ -87,6 +96,25 @@ const reducer = (state, action = { type: '' }) => {
       const apps = state.apps.map(app =>
         app.id === action.payload
           ? { ...app, zIndex: state.nextZIndex, minimized: false }
+          : app,
+      );
+      return {
+        ...state,
+        apps,
+        nextZIndex: state.nextZIndex + 1,
+        focusing: FOCUSING.WINDOW,
+      };
+    }
+    case FOCUS_AND_SHAKE_APP: {
+      const id = action.payload;
+      const apps = state.apps.map(app =>
+        app.id === id
+          ? {
+              ...app,
+              zIndex: state.nextZIndex,
+              minimized: false,
+              shakeNonce: (app.shakeNonce || 0) + 1,
+            }
           : app,
       );
       return {
@@ -196,9 +224,77 @@ const reducer = (state, action = { type: '' }) => {
 };
 function WinXP() {
   const [state, dispatch] = useReducer(reducer, initState);
+  const [winXpSignedIn, setWinXpSignedIn] = useState(() => isWinXpSignedIn());
+  const [screensaverOn, setScreensaverOn] = useState(false);
+  const idleTimerRef = useRef(null);
+  const screensaverOnRef = useRef(false);
+  const screensaverIdleAllowedRef = useRef(false);
   const ref = useRef(null);
   const mouse = useMouse(ref);
   const focusedAppId = getFocusedAppId();
+
+  useEffect(() => {
+    screensaverOnRef.current = screensaverOn;
+  }, [screensaverOn]);
+
+  useEffect(() => {
+    const onSession = () => setWinXpSignedIn(isWinXpSignedIn());
+    window.addEventListener('winxp-session-changed', onSession);
+    return () => window.removeEventListener('winxp-session-changed', onSession);
+  }, []);
+
+  const screensaverIdleEnabled =
+    !state.computerOff && state.powerState === POWER_STATE.START;
+
+  useEffect(() => {
+    screensaverIdleAllowedRef.current = screensaverIdleEnabled;
+  }, [screensaverIdleEnabled]);
+
+  const bumpScreensaverActivity = useCallback(() => {
+    if (screensaverOnRef.current) {
+      setScreensaverOn(false);
+    }
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(() => {
+      if (screensaverIdleAllowedRef.current) {
+        setScreensaverOn(true);
+      }
+    }, IDLE_SCREENSAVER_MS);
+  }, []);
+
+  useEffect(() => {
+    if (!screensaverIdleEnabled) {
+      setScreensaverOn(false);
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = null;
+      }
+      return;
+    }
+
+    bumpScreensaverActivity();
+    const opts = { capture: true, passive: true };
+    const names = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'wheel'];
+    names.forEach(n => window.addEventListener(n, bumpScreensaverActivity, opts));
+    return () => {
+      names.forEach(n =>
+        window.removeEventListener(n, bumpScreensaverActivity, opts),
+      );
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = null;
+      }
+    };
+  }, [screensaverIdleEnabled, bumpScreensaverActivity]);
+
+  const focusOrOpenLogOn = useCallback(() => {
+    const logon = state.apps.find(a => a.component === LogOnComponent);
+    if (logon) {
+      dispatch({ type: FOCUS_AND_SHAKE_APP, payload: logon.id });
+    } else {
+      dispatch({ type: ADD_APP, payload: appSettings.LogOn });
+    }
+  }, [state.apps]);
   const onFocusApp = useCallback(id => {
     dispatch({ type: FOCUS_APP, payload: id });
   }, []);
@@ -271,7 +367,17 @@ function WinXP() {
       dispatch({ type: ADD_APP, payload: appSettings['WebCam Viewer'] });
     else if (o === 'Welcome to my Windows')
       dispatch({ type: ADD_APP, payload: appSettings.WelcomeToMyWindows });
-    else if (o === 'Log Off')
+    else if (o === 'iPod') {
+      sessionStorage.removeItem('winxp-disclaimer-accepted');
+      sessionStorage.removeItem('winxp-boot-complete');
+      document.documentElement.classList.remove('winxp-landing-dismissed');
+      const gate = document.getElementById('landing-gate');
+      if (gate) {
+        gate.hidden = false;
+        gate.removeAttribute('aria-hidden');
+      }
+    }
+    else if (o === 'Log Off' || o === 'Sign In')
       dispatch({ type: POWER_OFF, payload: POWER_STATE.LOG_OFF });
     else if (o === 'Turn Off Computer')
       dispatch({ type: POWER_OFF, payload: POWER_STATE.TURN_OFF });
@@ -300,6 +406,19 @@ function WinXP() {
     },
     [dispatch],
   );
+  const openErrorDialog = useCallback((message, title = 'Notice') => {
+    dispatch({
+      type: ADD_APP,
+      payload: {
+        ...appSettings.Error,
+        header: {
+          ...appSettings.Error.header,
+          title: title || 'Notice',
+        },
+        injectProps: { message },
+      },
+    });
+  }, []);
   function pauseAllSiteAudio() {
     document.querySelectorAll('audio, video').forEach(el => el.pause());
     window.dispatchEvent(new CustomEvent('winxp-shutdown'));
@@ -310,6 +429,11 @@ function WinXP() {
       dispatch({ type: SHUTDOWN_START });
       return;
     }
+    if (text === 'Switch User' || text === 'Sign In') {
+      focusOrOpenLogOn();
+      dispatch({ type: CANCEL_POWER_OFF });
+      return;
+    }
     if (text === 'Log Off') {
       try {
         const { signOut } = await import('firebase/auth');
@@ -318,6 +442,8 @@ function WinXP() {
       } catch (e) {
         console.warn('Log off:', e);
       }
+      clearWinXpSignedIn();
+      window.dispatchEvent(new CustomEvent('winxp-session-changed'));
       dispatch({ type: CANCEL_POWER_OFF });
       return;
     }
@@ -362,6 +488,7 @@ function WinXP() {
             onMinimize={onMinimizeWindow}
             onMaximize={onMaximizeWindow}
             focusedAppId={focusedAppId}
+            openErrorDialog={openErrorDialog}
             openApp={name => {
               if (appSettings[name]) {
                 dispatch({ type: ADD_APP, payload: appSettings[name] });
@@ -374,6 +501,7 @@ function WinXP() {
             focusedAppId={focusedAppId}
             onMouseDown={onMouseDownFooter}
             onClickMenuItem={onClickMenuItem}
+            winXpSignedIn={winXpSignedIn}
           />
         </>
       )}
@@ -382,6 +510,7 @@ function WinXP() {
           onClose={onModalClose}
           onClickButton={onClickModalButton}
           mode={state.powerState}
+          winXpSignedIn={winXpSignedIn}
         />
       )}
       {state.computerOff && (
@@ -391,6 +520,10 @@ function WinXP() {
           onWake={() => dispatch({ type: WAKE_UP })}
         />
       )}
+      <AquariumScreensaver
+        visible={screensaverOn}
+        onWake={bumpScreensaverActivity}
+      />
     </Container>
   );
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1"
+	 id="svg2985" inkscape:version="0.91 r13725" sodipodi:docname="Twitch_logo.svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1686.3 558.9"
+	 style="enable-background:new 0 0 1686.3 558.9;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#6441A5;}
+	.st1{fill:#FFFFFF;}
+</style>
+<sodipodi:namedview  bordercolor="#666666" borderopacity="1" fit-margin-bottom="0.5" fit-margin-left="0.5" fit-margin-right="0.5" fit-margin-top="0.5" gridtolerance="10" guidetolerance="10" id="namedview2987" inkscape:current-layer="g2993" inkscape:cx="258.51347" inkscape:cy="176.64414" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-height="931" inkscape:window-maximized="1" inkscape:window-width="1680" inkscape:window-x="0" inkscape:window-y="1" inkscape:zoom="0.33712566" objecttolerance="10" pagecolor="#ffffff" showgrid="false">
+	</sodipodi:namedview>
+<g id="g2993" transform="matrix(1.25,0,0,-1.25,-168.75089,944.6879)" inkscape:groupmode="layer" inkscape:label="Twitch_IntegrationGuidelines">
+	<g id="g3001" transform="matrix(2.3423349,0,0,2.3423349,915.94688,664.41791)">
+		<path id="path3003" inkscape:connector-curvature="0" class="st0" d="M213,9.3h-36.1V39h-62.5L84.7,9.5H51.8L35.2-6.9V9.5H5.7V39
+			h-111.9V9.3h-134.9L-270.9,39h-62.5V-92.7l29.5-29.5l49.3-29.7h42.7v6.6l16.5-6.6h79.7l14.2,16.5l1.9-16.5h52.2l1,16.5l18.9-16.5
+			h46.1l3.4,16.5l16.5-16.5h52.7l16.4,16.5v-16.5H137l23,16.5v-16.5h32.9l49.6,32.9v98.7L213,9.3z M-254.4-109h-42.9l-23,23.1V26
+			h36.1V-3.9h29.5V-40h-29.4v-32.9h29.5V-109z M-106.4-86.1l-23-23.1h-111.9V-3.9h36.3v-69h13.2v69h36.1v-69h13.2v69h36.1V-86.1z
+			 M-93.2,25.8h36.1V9.3h-36.1V25.8z M-56.9-109H-93V-3.7h36.1V-109z M22.1-40H-7.5v-32.9h29.5V-109h-42.7l-23.1,23.1V26h36.3V-3.9
+			h29.5V-40z M114.2-109H58.4l-23.1,23v59.2l23,23h55.9V-40H71.5v-32.9h42.7V-109z M229.4-109h-36.1v69h-29.7v-69h-36.3V25.8h36.3
+			V-3.9h42.7l23.1-23V-109z"/>
+	</g>
+</g>
+<polygon class="st1" points="231.3,327.6 231.3,433.4 105.8,433.4 38.6,365.7 38.6,38 144.3,38 144.3,125.5 230.8,125.5 
+	230.8,231.3 144.8,231.3 144.8,327.6 "/>
+<polygon class="st1" points="1647.7,192.7 1647.7,433.4 1542,433.4 1542,231.3 1455,231.3 1455,433.4 1348.7,433.4 1348.7,38.5 
+	1455,38.5 1455,125.5 1580,125.5 "/>
+<polygon class="st1" points="1310.7,327.6 1310.7,433.4 1147.1,433.4 1079.4,366.2 1079.4,192.7 1146.6,125.5 1310.2,125.5 
+	1310.2,231.3 1185.6,231.3 1185.6,327.6 "/>
+<polygon class="st1" points="954.4,231.3 954.4,327.6 1040.8,327.6 1040.8,433.4 915.8,433.4 848.1,365.7 848.1,38 954.4,38 
+	954.4,125.5 1040.8,125.5 1040.8,231.3 "/>
+<rect x="703.3" y="38.5" class="st1" width="105.7" height="48.4"/>
+<rect x="703.8" y="125" class="st1" width="105.8" height="308.4"/>
+<polygon class="st1" points="664.7,125.5 664.7,366.2 597.5,433.9 269.9,433.9 269.9,125.5 376.1,125.5 376.1,327.6 414.7,327.6 
+	414.7,125.5 520.4,125.5 520.4,327.6 559,327.6 559,125.5 "/>
+</svg>

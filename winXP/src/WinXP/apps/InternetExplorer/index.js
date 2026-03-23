@@ -24,7 +24,7 @@ import windows from '../../../assets/windowsIcons/windows.png';
 import dropdown from '../../../assets/windowsIcons/dropdown.png';
 import aimLogo from '../../../assets/aim-logo.png';
 
-function InternetExplorer({ onClose, showMySpace, openApp }) {
+function InternetExplorer({ onClose, showMySpace, openApp, openErrorDialog }) {
   const [showMySpaceView, setShowMySpaceView] = useState(showMySpace);
   const [state, setState] = useState({
     route: 'main',
@@ -186,7 +186,7 @@ function InternetExplorer({ onClose, showMySpace, openApp }) {
       <div className="ie__content">
         <div className="ie__content__inner">
           {showMySpaceView ? (
-            <MySpace openApp={openApp} />
+            <MySpace openApp={openApp} openErrorDialog={openErrorDialog} />
           ) : (
             <Google
               route={state.route}

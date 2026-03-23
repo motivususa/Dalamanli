@@ -22,3 +22,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.env
+
+# ~256MB — over GitHub’s 100MB limit; keep locally or host via CDN/LFS
+public/aquarium-screensaver.mp4
