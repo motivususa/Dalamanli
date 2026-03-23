@@ -18,15 +18,15 @@ export const GlobalStyles = createGlobalStyle`
       min-height: 480px;
     }
 
-    /* Mobile: let iPod scale naturally, center it, allow scroll */
+    /* Mobile: center the iPod vertically, no dead space */
     @media (max-width: 576px) {
-      height: auto;
-      min-height: 100dvh;
+      height: 100dvh;
+      min-height: unset;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
-      padding: 16px 0;
-      overflow: auto;
+      padding: 0;
+      overflow: hidden;
     }
   }
 
