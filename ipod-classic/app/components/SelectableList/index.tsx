@@ -145,51 +145,13 @@ const SelectableList = ({
 
   /** Always make sure the selected item is within the screen's view. */
   useEffect(() => {
-    if (!isMounted || !containerRef.current || !fullOptions.length) return;
-
-    const container = containerRef.current;
-    const targetIndex = loadingNextItems ? activeIndex + 1 : activeIndex;
-    const child = container.children[targetIndex] as HTMLElement | undefined;
-    if (!child) return;
-
-    /*
-     * The Container div has no fixed height — its clientHeight equals
-     * scrollHeight so scroll conditions never fire.
-     * Walk up to find the nearest ancestor with a constrained height
-     * (the ScreenContainer which is 260px fixed).
-     */
-    let scrollParent: HTMLElement | null = container.parentElement;
-    while (scrollParent) {
-      const { overflow, overflowY } = window.getComputedStyle(scrollParent);
-      const canScroll = /(auto|scroll|hidden)/.test(overflow + overflowY);
-      if (canScroll && scrollParent.scrollHeight > scrollParent.clientHeight) {
-        break;
+    if (isMounted && containerRef.current && fullOptions.length) {
+      const { children } = containerRef.current;
+      if (loadingNextItems) {
+        children[activeIndex + 1]?.scrollIntoView({ block: "nearest" });
+      } else {
+        children[activeIndex]?.scrollIntoView({ block: "nearest" });
       }
-      // Also break if height is constrained (fixed px height)
-      if (scrollParent.clientHeight > 0 && scrollParent.clientHeight < scrollParent.scrollHeight) {
-        break;
-      }
-      scrollParent = scrollParent.parentElement;
-    }
-
-    // Fallback to the container itself
-    const scroller = scrollParent ?? container;
-
-    const scrollerTop    = scroller.scrollTop;
-    const scrollerBottom = scrollerTop + scroller.clientHeight;
-    // offsetTop is relative to offsetParent — walk up to get offset relative to scroller
-    let childOffsetTop = 0;
-    let el: HTMLElement | null = child;
-    while (el && el !== scroller) {
-      childOffsetTop += el.offsetTop;
-      el = el.offsetParent as HTMLElement | null;
-    }
-    const childOffsetBottom = childOffsetTop + child.offsetHeight;
-
-    if (childOffsetTop < scrollerTop) {
-      scroller.scrollTop = childOffsetTop;
-    } else if (childOffsetBottom > scrollerBottom) {
-      scroller.scrollTop = childOffsetBottom - scroller.clientHeight;
     }
   }, [activeIndex, isMounted, fullOptions.length, loadingNextItems]);
 
