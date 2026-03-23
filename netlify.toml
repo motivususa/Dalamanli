@@ -1,0 +1,9 @@
+[build]
+  base    = "winXP"
+  command = "npm run build"
+  publish = "winXP/build"
+
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
