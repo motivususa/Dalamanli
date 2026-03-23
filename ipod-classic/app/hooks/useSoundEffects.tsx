@@ -9,6 +9,7 @@ const PUBLIC = process.env.NEXT_PUBLIC_BASE_PATH ?? "/ipod";
 const SOUND_FORWARD = `${PUBLIC}/sounds/right.wav`;  // scrolling forward (down)
 const SOUND_BACKWARD = `${PUBLIC}/sounds/left.wav`;  // scrolling backward (up)
 const SOUND_CLICK = `${PUBLIC}/sounds/click.mp3`;    // any button press
+const CLICK_VOLUME = 0.75;
 
 interface Props {
   children: React.ReactNode;
@@ -48,7 +49,7 @@ export const SoundEffectsProvider = ({ children }: Props) => {
   // Pre-build players once so Audio objects are reused (no reload lag)
   const playForward  = useRef(makePlayer(SOUND_FORWARD,  0.6));
   const playBackward = useRef(makePlayer(SOUND_BACKWARD, 0.6));
-  const playClick    = useRef(makePlayer(SOUND_CLICK,    0.55));
+  const playClick    = useRef(makePlayer(SOUND_CLICK,    CLICK_VOLUME));
 
   useEffect(() => {
     soundsMutedRef.current = soundsMuted;
