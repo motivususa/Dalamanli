@@ -1,0 +1,60 @@
+.chat {
+  width: 600px;
+  height: 600px;
+
+  display: flex;
+  flex-direction: column;
+
+  @media only screen and (max-width: 37.5em) {
+    width: 300px;
+  }
+
+  .sender {
+    margin: 5px 0 10px 0;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+
+    &__icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .input {
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__text {
+      flex: 1;
+      padding-bottom: 0;
+      border: none;
+      outline: none;
+      color: #2f2d52;
+    }
+
+    &__image {
+      cursor: pointer;
+      margin: 0 8px 0 16px;
+
+      img {
+        height: 24px;
+        width: 24px;
+      }
+    }
+
+    &__attached {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      img {
+        width: 15px;
+        height: 15px;
+      }
+    }
+  }
+}

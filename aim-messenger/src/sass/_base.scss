@@ -1,0 +1,58 @@
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
+}
+
+body {
+  height: 100vh;
+  height: 100dvh;
+
+  background-image: url(../assets/images/xpwallpaper.jpeg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+  display: grid;
+  place-content: center;
+  margin: 0;
+
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font: inherit;
+}
+
+label,
+input,
+textarea,
+button {
+  font-size: 12px;
+}
+
+button {
+  cursor: pointer;
+}
+
+.window-container {
+  display: flex;
+  overflow: hidden;
+}
+
+.window {
+  font-size: 12px;
+
+  height: fit-content;
+  width: fit-content;
+
+  position: absolute;
+  z-index: 0;
+}
