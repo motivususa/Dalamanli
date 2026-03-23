@@ -49,8 +49,8 @@ const Container = styled.div.attrs({
        * at every zoom level and screen size with zero JS involvement.
        */
       position: absolute;
-      left: 50%;
-      transform: translateX(-50%) translate3d(0px, 4px, 20px)
+      left: calc(50% - 64px);
+      transform: translate3d(0px, 4px, 20px)
         ${props.$isSelected && "rotateY(-180deg) translateY(25%) scale(0.96)"};
 
       ${props.$isSelected &&
