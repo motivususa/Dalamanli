@@ -43,14 +43,8 @@ const Container = styled.div.attrs({
     props.$isActive &&
     css`
       transition: transform 0.3s, opacity 0.35s, background 0.35s;
-      /*
-       * Pure CSS centering — never depends on JS midpoint measurement.
-       * position:absolute + left:50% + translateX(-50%) centers correctly
-       * at every zoom level and screen size with zero JS involvement.
-       */
-      position: absolute;
-      left: calc(50% - 64px);
-      transform: translate3d(0px, 4px, 20px)
+      /* Original pixel midpoint math — works correctly with transform:scale */
+      transform: translate3d(${props.$midpoint.x - 60}px, 4px, 20px)
         ${props.$isSelected && "rotateY(-180deg) translateY(25%) scale(0.96)"};
 
       ${props.$isSelected &&

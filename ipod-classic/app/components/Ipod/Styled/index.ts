@@ -27,9 +27,18 @@ export const Shell = styled.div<{ $deviceTheme: DeviceThemeName }>`
     width: 370px;
     max-height: 37em;
     border-radius: 30px;
-    /* zoom shrinks the whole shell + contents proportionally, no clipping */
-    zoom: min(0.82, calc(100vw / 370px));
     margin: 0 auto;
+    /*
+     * Use transform:scale instead of zoom.
+     * zoom breaks getBoundingClientRect() on Safari iOS — the midpoint
+     * calculation inside CoverFlow reads wrong values and shifts the art.
+     * transform:scale keeps layout measurements correct so midpoint math works.
+     */
+    --mobile-scale: min(0.82, calc(100vw / 370px));
+    transform: scale(var(--mobile-scale));
+    transform-origin: top center;
+    /* Collapse the dead space that scale leaves behind */
+    margin-bottom: calc((var(--mobile-scale) - 1) * 37em);
   }
 
   @keyframes descend {
