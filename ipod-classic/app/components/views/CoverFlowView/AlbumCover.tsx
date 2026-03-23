@@ -43,6 +43,7 @@ const Container = styled.div.attrs({
     props.$isActive &&
     css`
       transition: transform 0.3s, opacity 0.35s, background 0.35s;
+      /* Original pixel midpoint math — works correctly with transform:scale */
       transform: translate3d(${props.$midpoint.x - 60}px, 4px, 20px)
         ${props.$isSelected && "rotateY(-180deg) translateY(25%) scale(0.96)"};
 
@@ -58,7 +59,8 @@ const Container = styled.div.attrs({
 
       ${props.$isPlaying &&
       css`
-        transform: translate(${props.$midpoint.x / 9}px, 8px) rotateY(35deg);
+        /* Use fixed offset instead of midpoint math — immune to zoom */
+        transform: translate(18px, 8px) rotateY(35deg);
 
         ${Artwork} {
           opacity: 1;

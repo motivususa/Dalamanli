@@ -1,5 +1,6 @@
 import { SelectableListOption } from "@/components/SelectableList";
 import { DEFAULT_ARTWORK_URL } from "@/utils/constants/api";
+import { withBasePath } from "@/utils/withBasePath";
 
 /** Accepts a url with '{w}' and '{h}' and replaces them with the specified size */
 export const getArtwork = (size: number | string, url?: string) => {
@@ -8,7 +9,12 @@ export const getArtwork = (size: number | string, url?: string) => {
   }
 
   const urlWithSize = url.replace("{w}", `${size}`).replace("{h}", `${size}`);
-  return urlWithSize;
+  if (/^https?:\/\//i.test(urlWithSize)) {
+    return urlWithSize;
+  }
+  return withBasePath(
+    urlWithSize.startsWith("/") ? urlWithSize : `/${urlWithSize}`
+  );
 };
 
 export const setDocumentSongTitle = (song?: AppleMusicApi.Song) => {

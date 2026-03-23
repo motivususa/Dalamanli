@@ -109,13 +109,30 @@ const CoverFlow = ({ albums }: Props) => {
   }, [activeIndex, playingAlbum, selectedAlbum]);
 
   const updateMidpoint = useCallback(() => {
-    if (containerRef.current) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setMidpoint({ x: width / 2, y: height / 2 });
-    }
+    const el = containerRef.current;
+    if (!el) return;
+    // Use layout box, not getBoundingClientRect(). When an ancestor (Shell) uses
+    // transform: scale() on mobile, getBoundingClientRect reflects the scaled
+    // size on screen while Cover Flow math (translate3d, offsets) is in layout
+    // pixels — that mismatch breaks album positioning and scrolling feel.
+    const width = el.offsetWidth;
+    const height = el.offsetHeight;
+    if (width === 0 || height === 0) return;
+    setMidpoint({ x: width / 2, y: height / 2 });
   }, []);
 
-  useEffect(updateMidpoint, [updateMidpoint]);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    updateMidpoint();
+    const ro = new ResizeObserver(() => updateMidpoint());
+    ro.observe(el);
+    window.addEventListener("resize", updateMidpoint);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", updateMidpoint);
+    };
+  }, [updateMidpoint]);
 
   useEventListener<IpodEvent>("centerclick", selectAlbum);
   useEventListener<IpodEvent>("menuclick", handleMenuClick);

@@ -17,6 +17,17 @@ export const GlobalStyles = createGlobalStyle`
     ${Screen.XS.MediaQuery} {
       min-height: 480px;
     }
+
+    /* Mobile: center the iPod vertically, no dead space */
+    @media (max-width: 576px) {
+      height: 100dvh;
+      min-height: unset;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: hidden;
+    }
   }
 
   a {
@@ -33,11 +44,15 @@ export const GlobalStyles = createGlobalStyle`
       color-scheme: dark;
     }
     body {
-      background: #3F4249;
+      background: #121212;
     }
   }
 
-  body.ipod-night-mode {
-    background: #3F4249 !important;
+  /* Set from DarkSurroundSync: OS dark, night hours, or black device theme */
+  html.ipod-dark-surround {
+    color-scheme: dark;
+  }
+  body.ipod-dark-surround {
+    background: #121212 !important;
   }
 `;

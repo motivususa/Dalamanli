@@ -37,11 +37,13 @@ const ScreenTouchHandler = ({ children }: Props) => {
     accumulated.current += deltaY;
 
     while (Math.abs(accumulated.current) >= SCROLL_THRESHOLD) {
+      // Swipe down (positive deltaY) = scroll backward (up the list)
+      // Swipe up (negative deltaY) = scroll forward (down the list)
       if (accumulated.current > 0) {
-        dispatchForwardScrollEvent();
+        dispatchBackwardScrollEvent();
         accumulated.current -= SCROLL_THRESHOLD;
       } else {
-        dispatchBackwardScrollEvent();
+        dispatchForwardScrollEvent();
         accumulated.current += SCROLL_THRESHOLD;
       }
     }

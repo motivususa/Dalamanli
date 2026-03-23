@@ -23,10 +23,17 @@ export const Shell = styled.div<{ $deviceTheme: DeviceThemeName }>`
 
   ${Screen.SM.MediaQuery} {
     animation: none;
-    width: 100vw;
-    max-height: unset;
-    border-radius: 0;
     -webkit-box-reflect: unset;
+    width: 370px;
+    max-height: 37em;
+    border-radius: 30px;
+    margin: 0 auto;
+    --mobile-scale: min(0.82, calc(100vw / 370px));
+    transform: scale(var(--mobile-scale));
+    transform-origin: top center;
+    margin-bottom: calc((var(--mobile-scale) - 1) * 37em);
+    will-change: transform;
+    clip-path: inset(0 0 0 0 round 30px);
   }
 
   @keyframes descend {

@@ -1,16 +1,8 @@
 import { useMemo } from "react";
-
-import SelectableList, {
-  SelectableListOption,
-} from "@/components/SelectableList";
+import SelectableList, { SelectableListOption } from "@/components/SelectableList";
 import { getConditionalOption } from "@/components/SelectableList";
 import { SplitScreenPreview } from "@/components/previews";
-import {
-  useAudioPlayer,
-  useMenuHideView,
-  useScrollHandler,
-} from "@/hooks";
-import { MYSPACE_TRACKS } from "@/data/myspaceTracks";
+import { useAudioPlayer, useMenuHideView, useScrollHandler } from "@/hooks";
 
 const MusicView = () => {
   const { nowPlayingItem } = useAudioPlayer();
@@ -20,9 +12,39 @@ const MusicView = () => {
     () => [
       {
         type: "view",
-        label: "MySpace Page Music",
+        label: "Playlists",
+        viewId: "playlists",
+        preview: SplitScreenPreview.Music,
+      },
+      {
+        type: "view",
+        label: "Artists",
+        viewId: "artists",
+        preview: SplitScreenPreview.Music,
+      },
+      {
+        type: "view",
+        label: "Albums",
+        viewId: "albums",
+        preview: SplitScreenPreview.Music,
+      },
+      {
+        type: "view",
+        label: "Songs",
         viewId: "songs",
-        props: { songs: MYSPACE_TRACKS },
+        props: { songs: [] }, // SongsView will use all tracks when empty
+        preview: SplitScreenPreview.Music,
+      },
+      {
+        type: "view",
+        label: "Genres",
+        viewId: "genres",
+        preview: SplitScreenPreview.Music,
+      },
+      {
+        type: "view",
+        label: "Search",
+        viewId: "search",
         preview: SplitScreenPreview.Music,
       },
       ...getConditionalOption(!!nowPlayingItem, {
@@ -37,7 +59,13 @@ const MusicView = () => {
 
   const [scrollIndex, handleItemTap] = useScrollHandler("music", options);
 
-  return <SelectableList options={options} activeIndex={scrollIndex} onItemTap={handleItemTap} />;
+  return (
+    <SelectableList
+      options={options}
+      activeIndex={scrollIndex}
+      onItemTap={handleItemTap}
+    />
+  );
 };
 
 export default MusicView;

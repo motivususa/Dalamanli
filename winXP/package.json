@@ -5,6 +5,9 @@
   "author": "ShizukuIchi <shizukuichi@gmail.com>",
   "homepage": "https://winxp.now.sh",
   "dependencies": {
+    "firebase": "9.23.0",
+    "javascript-time-ago": "^2.5.9",
+    "uuid": "^9.0.0",
     "lodash.samplesize": "^4.2.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

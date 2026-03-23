@@ -1,0 +1,8 @@
+/* MySpace EQ Visualizer */
+
+#eq-visualizer {
+  display: block;
+  background: transparent;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}

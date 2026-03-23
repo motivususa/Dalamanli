@@ -97,8 +97,10 @@ const SelectableListItem = ({ option, isActive, onTap }: Props) => {
         <Label>{option.label}</Label>
         {option.sublabel && <Sublabel>{option.sublabel}</Sublabel>}
       </LabelContainer>
-      {isActive && <Icon src={arrowRight.src} />}
-      {isPlaying && !isActive && (
+      {/* Only show arrow for non-song items (views, actions, links) */}
+      {isActive && option.type !== "song" && <Icon src={arrowRight.src} />}
+      {/* Volume indicator for the currently playing song */}
+      {isPlayingSong && (
         <Icon src={volumeFull.src} $size={16} style={{ marginRight: 8 }} />
       )}
     </Container>

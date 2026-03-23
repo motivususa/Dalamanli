@@ -1,140 +1,92 @@
-import React, { useCallback, useMemo, useState } from "react";
-
-import AuthPrompt from "@/components/AuthPrompt";
-import { getConditionalOption } from "@/components/SelectableList";
-import SelectableList, {
-  SelectableListOption,
-} from "@/components/SelectableList";
-import {
-  useEffectOnce,
-  useKeyboardInput,
-  useMenuHideView,
-  useScrollHandler,
-  useSettings,
-} from "@/hooks";
-import { useFetchSearchResults } from "@/hooks/utils/useDataFetcher";
+import { useMemo, useState } from "react";
+import SelectableList, { SelectableListOption } from "@/components/SelectableList";
+import { useMenuHideView, useScrollHandler } from "@/hooks";
+import { MYSPACE_TRACKS, MYSPACE_ALBUMS, MYSPACE_ARTISTS } from "@/data/myspaceTracks";
 import { APP_URL } from "@/utils/constants/api";
-import { pluralize } from "@/utils/strings";
 
 const SearchView = () => {
   useMenuHideView("search");
-  const { isAuthorized } = useSettings();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [query, setQuery] = useState("");
 
-  const {
-    refetch,
-    data: searchResults,
-    isFetching,
-  } = useFetchSearchResults({
-    query: searchTerm,
-    lazy: true,
-  });
+  const results = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return { songs: [], albums: [], artists: [] };
 
-  const handleEnterPress = useCallback(() => {
-    if (searchTerm) {
-      refetch();
-    }
-  }, [refetch, searchTerm]);
+    const songs = MYSPACE_TRACKS.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        (s.artistName ?? "").toLowerCase().includes(q)
+    );
 
-  const { showKeyboard } = useKeyboardInput({
-    onChange: (value) => setSearchTerm(value),
-    onEnterPress: handleEnterPress,
-  });
+    const albums = MYSPACE_ALBUMS.filter(
+      (a) =>
+        a.name.toLowerCase().includes(q) ||
+        (a.artistName ?? "").toLowerCase().includes(q)
+    );
+
+    const artists = MYSPACE_ARTISTS.filter((a) =>
+      a.name.toLowerCase().includes(q)
+    );
+
+    return { songs, albums, artists };
+  }, [query]);
 
   const options: SelectableListOption[] = useMemo(() => {
-    const artists = searchResults?.artists;
-    const albums = searchResults?.albums;
-    const songs = searchResults?.songs;
-    const playlists = searchResults?.playlists;
-
     const arr: SelectableListOption[] = [
       {
         type: "action",
         label: "Search",
-        sublabel: searchTerm
-          ? `Results for: ${searchTerm}`
-          : "Enter text to search",
+        sublabel: query ? `Results for: "${query}"` : "Type to search songs, artists, albums",
         imageUrl: `${APP_URL}/search_icon.svg`,
-        onSelect: showKeyboard,
+        onSelect: () => {
+          const term = window.prompt("Search MySpace music:");
+          if (term !== null) setQuery(term);
+        },
       },
-      ...getConditionalOption(!!artists?.length, {
+    ];
+
+    if (results.artists.length > 0) {
+      arr.push({
         type: "view",
         label: "Artists",
         viewId: "artists",
-        props: { artists, inLibrary: false, showImages: true },
-        imageUrl: `${APP_URL}/artists_icon.svg`,
-        sublabel: `${artists?.length} ${pluralize(
-          "artist",
-          "artists",
-          artists?.length
-        )}`,
-      }),
-      ...getConditionalOption(!!albums?.length, {
+        sublabel: `${results.artists.length} found`,
+        props: { artists: results.artists },
+      });
+    }
+
+    if (results.albums.length > 0) {
+      arr.push({
         type: "view",
         label: "Albums",
         viewId: "albums",
-        props: { albums, inLibrary: false },
-        imageUrl: `${APP_URL}/albums_icon.svg`,
-        sublabel: `${albums?.length} ${pluralize(
-          "album",
-          "albums",
-          albums?.length
-        )}`,
-      }),
-      ...getConditionalOption(!!songs?.length, {
+        sublabel: `${results.albums.length} found`,
+        props: { albums: results.albums },
+      });
+    }
+
+    if (results.songs.length > 0) {
+      arr.push({
         type: "view",
         label: "Songs",
         viewId: "songs",
-        props: { songs: songs ?? [] },
-        imageUrl: `${APP_URL}/song_icon.svg`,
-        sublabel: `${songs?.length} ${pluralize(
-          "song",
-          "songs",
-          songs?.length
-        )}`,
-      }),
-      ...getConditionalOption(!!playlists?.length, {
-        type: "view",
-        label: "Playlists",
-        viewId: "playlists",
-        props: { playlists, inLibrary: false },
-        imageUrl: `${APP_URL}/playlist_icon.svg`,
-        sublabel: `${playlists?.length} ${pluralize(
-          "playlist",
-          "playlists",
-          playlists?.length
-        )}`,
-      }),
-    ];
+        sublabel: `${results.songs.length} found`,
+        props: { songs: results.songs },
+      });
+    }
 
     return arr;
-  }, [
-    searchResults?.albums,
-    searchResults?.artists,
-    searchResults?.playlists,
-    searchResults?.songs,
-    searchTerm,
-    showKeyboard,
-  ]);
-
-  useEffectOnce(() => {
-    if (isAuthorized) {
-      showKeyboard();
-    }
-  });
+  }, [query, results]);
 
   const [scrollIndex, handleItemTap] = useScrollHandler("search", options);
 
-  return isAuthorized ? (
+  return (
     <SelectableList
-      loading={isFetching}
       options={options}
       activeIndex={scrollIndex}
-      emptyMessage="No results"
       onItemTap={handleItemTap}
+      emptyMessage="No results"
     />
-  ) : (
-    <AuthPrompt message="Sign in to search" />
   );
 };
 

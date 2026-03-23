@@ -1,74 +1,42 @@
-import { useCallback, useMemo } from "react";
-
-import AuthPrompt from "@/components/AuthPrompt";
-import SelectableList, {
-  SelectableListOption,
-} from "@/components/SelectableList";
-import { useMenuHideView, useScrollHandler, useSettings } from "@/hooks";
+import { useMemo } from "react";
+import SelectableList, { SelectableListOption } from "@/components/SelectableList";
+import { useMenuHideView, useScrollHandler } from "@/hooks";
 import * as Utils from "@/utils";
-
-import { useFetchAlbums } from "@/hooks/utils/useDataFetcher";
+import { MYSPACE_ALBUMS } from "@/data/myspaceTracks";
 
 interface Props {
   albums?: MediaApi.Album[];
   inLibrary?: boolean;
 }
 
-const AlbumsView = ({ albums, inLibrary = true }: Props) => {
-  const { isAuthorized } = useSettings();
+const AlbumsView = ({ albums }: Props) => {
   useMenuHideView("albums");
 
-  const {
-    data: fetchedAlbums,
-    fetchNextPage,
-    isFetchingNextPage,
-    isLoading,
-  } = useFetchAlbums({
-    // Don't fetch if we're passed an initial array of albums
-    lazy: !!albums,
-  });
+  const data = albums ?? MYSPACE_ALBUMS;
 
-  const options: SelectableListOption[] = useMemo(() => {
-    const data =
-      albums ?? fetchedAlbums?.pages.flatMap((page) => page?.data ?? []);
-
-    return (
-      data?.map((album) => ({
+  const options: SelectableListOption[] = useMemo(
+    () =>
+      data.map((album): SelectableListOption => ({
         type: "view",
-        headerTitle: album.name,
         label: album.name,
-        subLabel: album.artistName,
-        image: { url: Utils.getArtwork(300, album.artwork?.url) ?? "" },
-        viewId: "album",
-        props: { id: album.id ?? "", inLibrary },
-      })) ?? []
-    );
-  }, [albums, fetchedAlbums, inLibrary]);
-
-  const handleNearEndOfList = useCallback(() => {
-    if (!isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, isFetchingNextPage]);
-
-  const [scrollIndex, handleItemTap] = useScrollHandler(
-    "albums",
-    options,
-    undefined,
-    handleNearEndOfList
+        sublabel: album.artistName,
+        imageUrl: Utils.getArtwork(100, album.artwork?.url),
+        viewId: "songs",
+        headerTitle: album.name,
+        props: { songs: album.songs ?? [] },
+      })),
+    [data]
   );
 
-  return isAuthorized ? (
+  const [scrollIndex, handleItemTap] = useScrollHandler("albums", options);
+
+  return (
     <SelectableList
-      loading={isLoading}
-      loadingNextItems={isFetchingNextPage}
       options={options}
       activeIndex={scrollIndex}
       emptyMessage="No albums"
       onItemTap={handleItemTap}
     />
-  ) : (
-    <AuthPrompt />
   );
 };
 
