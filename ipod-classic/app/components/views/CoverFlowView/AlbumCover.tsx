@@ -43,7 +43,10 @@ const Container = styled.div.attrs({
     props.$isActive &&
     css`
       transition: transform 0.3s, opacity 0.35s, background 0.35s;
-      transform: translate3d(${props.$midpoint.x - 60}px, 4px, 20px)
+      /* Center using % so CSS zoom on mobile doesn't break the math */
+      position: absolute;
+      left: calc(50% - 4em);
+      transform: translate3d(0px, 4px, 20px)
         ${props.$isSelected && "rotateY(-180deg) translateY(25%) scale(0.96)"};
 
       ${props.$isSelected &&
