@@ -43,9 +43,9 @@ const Container = styled.div.attrs({
     props.$isActive &&
     css`
       transition: transform 0.3s, opacity 0.35s, background 0.35s;
-      /* Center using % so CSS zoom on mobile doesn't break the math */
+      /* Center using % — 50% of container minus half album width (60px = ~3.75em) */
       position: absolute;
-      left: calc(50% - 4em);
+      left: calc(50% - 60px);
       transform: translate3d(0px, 4px, 20px)
         ${props.$isSelected && "rotateY(-180deg) translateY(25%) scale(0.96)"};
 
@@ -61,7 +61,8 @@ const Container = styled.div.attrs({
 
       ${props.$isPlaying &&
       css`
-        transform: translate(${props.$midpoint.x / 9}px, 8px) rotateY(35deg);
+        /* Use fixed offset instead of midpoint math — immune to zoom */
+        transform: translate(18px, 8px) rotateY(35deg);
 
         ${Artwork} {
           opacity: 1;
