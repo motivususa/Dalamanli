@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>My Profile | Myspace</title>
+		<link rel="stylesheet" href="myspace.css">
+	</head>
+	<body>
+		<div class="container">
+			<header>
+				<div class="headerTop">
+					<div class="headerOuter right">
+						<div class="right">
+							<div class="headerUtility">
+								<a href="">MySpace en Español</a>
+								 |
+								<a href=""><img src="images/globe.gif" alt="" class="globeIcon" align="top">International</a>
+								 |
+							</div>
+							<a href="">Help</a>
+							 |
+							<a href="">SignUp</a>
+						</div>
+						<div class="clear"></div>
+						<div class="headerLogo left">
+							<a href=""><img src="images/LogoDotcom.gif" alt="myspace.com - a place for friends"></a>
+						</div>
+						<div class="headerSearch right">
+							<form name="srch" style="width: 435px; float: left;">
+								<div class="searchTabs">
+									<a href="" class="searchTab active">MySpace</a> |
+									<a href="" class="searchTab">People</a> |
+									<a href="" class="searchTab">Web</a> |
+									<a href="" class="searchTab">Music</a> |
+									<a href="" class="searchTab">Music Videos</a> |
+									<a href="" class="searchTab">Blogs</a>
+									<span class="blogsArrow">&#9658;</span>
+								</div>
+								<div class="searchBar left">
+									<input type="text" class="searchInput" style="height: 22px; width: 375px;">
+									<input type="submit" value="Search" class="searchBtn">
+								</div>
+							</form>
+							<img src="images/powered_by_google_white.png" alt="powered by Google" class="headerGoogle" style="vertical-align: bottom; margin-top: 10px; margin-left: 2px; float: left;">
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<nav class="topnav" id="nav">
+					<a href="">Home</a> |
+					<a href="">Browse</a> |
+					<a href="">Search</a> |
+					<a href="">Invite</a> |
+					<a href="">Film</a> |
+					<a href="">Mail</a> |
+					<a href="">Blog</a> |
+					<a href="">Favorites</a> |
+					<a href="">Forum</a> |
+					<a href="">Groups</a> |
+					<a href="">Events</a> |
+					<a href="">Videos</a> |
+					<a href="">Music</a> |
+					<a href="">Comedy</a> |
+					<a href="">Classifieds</a>
+				</nav>
+				<button id="menuToggle" onClick="toggleNav();">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 13h-5v5h-2v-5h-5v-2h5v-5h2v5h5v2z"/></svg>
+				</button>
+			</header>
+			<div class="main">
+				<div class="left">
+					<div class="profile">
+						<div class="profilePicture">
+							<h2 class="userName"></h2>
+							<img src="images/user.jpg" alt="" style="display: block; width: 100px;">
+							<p class="mood"><strong>Mood:</strong> productive <img src="images/productive.gif" alt="" class="moodEmoji"></p>
+							<p class="viewMy">View My: <a href="">Pics</a> | <a href="">Videos</a></p>
+						</div>
+						<div class="profileInfo">
+							<span class="tagline">"This is my tagline!"</span>
+							<p>Male</p>
+							<p>32 years old</p>
+							<p>Monterey, CALIFORNIA</p>
+							<p>United States</p>
+							<div class="onlineNow">Online Now!</div>
+							<p style="margin-bottom: 30px;">Last Login: <span id="lastLog"></span></p>
+						</div>
+					</div>
+					<div class="contact">
+						<h3>Contacting <span class="userName"></span></h3>
+						<div class="contactNav">
+							<ul>
+								<li><a href=""><img src="images/mail_1.gif" alt="Send Message"></a></li>
+								<li><a href=""><img src="images/friend_1.gif" alt="Add to Friends"></a></li>
+								<li><a href=""><img src="images/im_1.gif" alt="Instant Message"></a></li>
+								<li><a href=""><img src="images/group_1.gif" alt="Add to Group"></a></li>
+							</ul>
+							<ul>
+								<li><a href=""><img src="images/forward_1.gif" alt="Forward to Friend"></a></li>
+								<li><a href=""><img src="images/favorite_1.gif" alt="Add to Favorites"></a></li>
+								<li><a href=""><img src="images/block_1.gif" alt="Block User"></a></li>
+								<li><a href=""><img src="images/rank_1.gif" alt="Rank User"></a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="userUrl">
+						<div class="userUrlInner">
+							<p><strong>MySpace URL:</strong></p>
+							<p><a href="http://www.myspace.com/kayawesley">http://www.myspace.com/kayawesley</a></p>
+						</div>
+					</div>
+					<div class="musicPlayer">
+						<!-- audio: https://www.youtube.com/watch?reload=9&v=UgmY2sB71Hc -->
+						<button id="playSong" class="show" type="button" onClick="audio.play(); playAudio()">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 22v-20l18 10-18 10z"/></svg>
+						</button>
+						<button id="pauseSong" type="button" onClick="audio.pause(); pauseAudio()">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 22h-4v-20h4v20zm6-20h-4v20h4v-20z"/></svg>
+						</button>
+						<div class="songName">
+							<span class="title">I'm Not Okay (I Promise)</span>
+							<span class="artist">My Chemical Romance</span>
+							<div id="playing"></div>
+						</div>
+					</div>
+					<div class="userDetails">
+						<h3><span class="userName"></span>'s Details</h3>
+						<table>
+							<tr><th>Status:</th><td>Single</td></tr>
+							<tr><th>Here for:</th><td>Friends</td></tr>
+							<tr><th>Hometown:</th><td>Monterey, California</td></tr>
+							<tr><th>Ethnicity:</th><td>White / Caucasian</td></tr>
+							<tr><th>Zodiac Sign:</th><td><a href="">Libra</a></td></tr>
+							<tr><th>Smoke / Drink:</th><td>No / No</td></tr>
+							<tr><th>Education:</th><td>Grad / professional school</td></tr>
+							<tr><th>Occupation:</th><td>Creative</td></tr>
+						</table>
+					</div>
+				</div>
+				<div class="right">
+					<div class="network">
+						<h4><span class="userName"></span> is in your extended network</h4>
+					</div>
+					<div class="blog">
+						<p style="font-weight: bold;"><span class="userName"></span>'s latest blog entry [<a href="">Subscribe to this blog</a>]</p>
+						<p><a href=""><span class="userName"></span>'s first blog entry</a></p>
+						<p>[<a href="">View All Blog Entries</a>]</p>
+					</div>
+					<div class="blurb">
+						<h3><span class="userName"></span>'s Blurbs</h3>
+						<h4>About me:</h4>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab nisi, cum ipsum incidunt ex veritatis optio unde commodi ipsam porro tempora dicta provident tenetur, molestiae quae. Odit velit, quam dolorum.</p>
+
+						<h4>Who I'd like to meet:</h4>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, nemo.</p>
+					</div>
+					<div class="friends">
+						<h3><span class="userName"></span>'s Friend Space</h3>
+						<p style="font-weight: bold; margin-left: 10px;"><span class="userName"></span> has 8 friends.</p>
+						<div class="top8">
+							<div><a href="">Tom<br><img src="images/friends/tom.jpg" alt="Tom"></a></div>
+							<div><a href="">Finn<br><img src="images/friends/finn.jpg" alt=""></a></div>
+							<div><a href="">Louie<br><img src="images/friends/louie.jpg" alt=""></a></div>
+							<div><a href="">Macc<br><img src="images/friends/macc.jpg" alt=""></a></div>
+							<div><a href="">Zeke<br><img src="images/friends/zeke.jpg" alt=""></a></div>
+							<div><a href="">Calypso<br><img src="images/friends/calypso.jpg" alt=""></a></div>
+							<div><a href="">Zeke 2<br><img src="images/friends/zeke-chihuahua.jpg" alt=""></a></div>
+							<div><a href="">CoolDog420<br><img src="images/friends/cooldog420.jpg" alt=""></a></div>
+						</div>
+						<p class="viewAllFriends"><a href="#allfriends">View All of <span class="userName"></span>'s Friends</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1; //January is 0!
+
+			var yyyy = today.getFullYear();
+			if (dd < 10) {
+			  dd = '0' + dd;
+			} 
+			if (mm < 10) {
+			  mm = '0' + mm;
+			} 
+			var today = mm + '/' + dd + '/' + yyyy;
+			document.getElementById('lastLog').innerHTML = today;
+
+			var userName = "Kaya Wesley";
+
+			var displayName = document.getElementsByClassName("userName")
+
+			displayName[0].innerHTML = userName;
+			displayName[1].innerHTML = userName;
+			displayName[2].innerHTML = userName;
+			displayName[3].innerHTML = userName;
+			displayName[4].innerHTML = userName;
+			displayName[5].innerHTML = userName;
+			displayName[6].innerHTML = userName;
+			displayName[7].innerHTML = userName;
+			displayName[8].innerHTML = userName;
+
+			// music player
+			var audio = new Audio('my-chemical-romance_im-not-okay-i-promise.mp3');
+			audio.play();
+			audio.pause();
+
+			var play = document.getElementById("playSong");
+		    var pause = document.getElementById("pauseSong");
+		    var playing = document.getElementById("playing");
+
+			function playAudio() {
+			  audio.play();
+			  play.classList.remove("show");
+			  pause.classList.add("show");
+			  playing.classList.add("show");
+			}
+
+			function pauseAudio() {
+			  audio.pause();
+			  play.classList.add("show");
+			  pause.classList.remove("show");
+			  playing.classList.remove("show");
+			}
+
+			function toggleNav() {
+				var menu = document.getElementById("nav");
+				var btn = document.getElementById("menuToggle");
+				menu.classList.toggle("showNav");
+				btn.classList.toggle("open");
+			}
+
+		</script>
+	</body>
+</html>

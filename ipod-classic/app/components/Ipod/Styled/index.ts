@@ -28,7 +28,8 @@ export const Shell = styled.div<{ $deviceTheme: DeviceThemeName }>`
     max-height: 37em;
     border-radius: 30px;
     margin: 0 auto;
-    --mobile-scale: min(0.82, calc(100vw / 370px));
+    /* Scale to fill viewport width — no artificial 0.82 cap */
+    --mobile-scale: calc(100vw / 370px);
     transform: scale(var(--mobile-scale));
     transform-origin: top center;
     margin-bottom: calc((var(--mobile-scale) - 1) * 37em);
