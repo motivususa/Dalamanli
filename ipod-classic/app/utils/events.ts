@@ -28,32 +28,33 @@ export type IpodEvent = `${BaseEventContext}${BaseEventAction}` | `idle`;
 /** Create a type-safe custom event for the iPod */
 export const createIpodEvent = (eventName: IpodEvent) => new Event(eventName);
 
-const backClickEvent = createIpodEvent("backwardclick");
-const backwardScrollEvent = createIpodEvent("backwardscroll");
-const centerClickEvent = createIpodEvent("centerclick");
-const centerLongClickEvent = createIpodEvent("centerlongclick");
-const forwardClickEvent = createIpodEvent("forwardclick");
-const forwardScrollEvent = createIpodEvent("forwardscroll");
-const idleEvent = createIpodEvent("idle");
-const menuClickEvent = createIpodEvent("menuclick");
-const menuLongPressEvent = createIpodEvent("menulongpress");
-const playPauseClickEvent = createIpodEvent("playpauseclick");
-const wheelClickEvent = createIpodEvent("wheelclick");
+/** Suppresses a second `menuclick` in the same synchronous turn (wheel can call dispatch twice). */
+let menuClickBurstLock = false;
 
-export const dispatchMenuClickEvent = () =>
-  window.dispatchEvent(menuClickEvent);
+/** Always dispatch a new Event instance so each dispatch runs listeners (reusing one Event is unreliable). */
+export const dispatchMenuClickEvent = () => {
+  if (menuClickBurstLock) {
+    return false;
+  }
+  menuClickBurstLock = true;
+  queueMicrotask(() => {
+    menuClickBurstLock = false;
+  });
+
+  return window.dispatchEvent(createIpodEvent("menuclick"));
+};
 
 export const dispatchCenterClickEvent = () =>
-  window.dispatchEvent(centerClickEvent);
+  window.dispatchEvent(createIpodEvent("centerclick"));
 
 export const dispatchCenterLongClickEvent = () =>
-  window.dispatchEvent(centerLongClickEvent);
+  window.dispatchEvent(createIpodEvent("centerlongclick"));
 
 export const dispatchForwardScrollEvent = () =>
-  window.dispatchEvent(forwardScrollEvent);
+  window.dispatchEvent(createIpodEvent("forwardscroll"));
 
 export const dispatchBackwardScrollEvent = () =>
-  window.dispatchEvent(backwardScrollEvent);
+  window.dispatchEvent(createIpodEvent("backwardscroll"));
 
 export const dispatchScrollEvent = (direction: ScrollDirection) =>
   direction === "clockwise"
@@ -61,21 +62,22 @@ export const dispatchScrollEvent = (direction: ScrollDirection) =>
     : dispatchBackwardScrollEvent();
 
 export const dispatchWheelClickEvent = () =>
-  window.dispatchEvent(wheelClickEvent);
+  window.dispatchEvent(createIpodEvent("wheelclick"));
 
 export const dispatchMenuLongPressEvent = () =>
-  window.dispatchEvent(menuLongPressEvent);
+  window.dispatchEvent(createIpodEvent("menulongpress"));
 
 export const dispatchBackClickEvent = () =>
-  window.dispatchEvent(backClickEvent);
+  window.dispatchEvent(createIpodEvent("backwardclick"));
 
 export const dispatchForwardClickEvent = () =>
-  window.dispatchEvent(forwardClickEvent);
+  window.dispatchEvent(createIpodEvent("forwardclick"));
 
 export const dispatchPlayPauseClickEvent = () =>
-  window.dispatchEvent(playPauseClickEvent);
+  window.dispatchEvent(createIpodEvent("playpauseclick"));
 
-export const dispatchIdleEvent = () => window.dispatchEvent(idleEvent);
+export const dispatchIdleEvent = () =>
+  window.dispatchEvent(createIpodEvent("idle"));
 
 export const dispatchKeyboardEvent = (key: string) => {
   switch (key) {

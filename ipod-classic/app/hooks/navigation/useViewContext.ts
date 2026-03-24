@@ -12,6 +12,13 @@ import {
 } from "@/providers/ViewContextProvider";
 
 /**
+ * Multiple `menuclick` listeners (or a double wheel dispatch) can call `hideView()`
+ * in the same synchronous turn; each schedules a pop. React runs both updaters,
+ * removing two stack entries. Allow only one pop-top per turn.
+ */
+let popTopConsumedInCurrentTurn = false;
+
+/**
  * Type-safe parameters for showView function.
  * - If view requires props: [props, headerTitle?]
  * - If view has no props: [props?, headerTitle?]
@@ -154,6 +161,17 @@ export const useViewContext = (): ViewContextHook => {
   const hideView = useCallback(
     (id?: string) => {
       if (viewContextState.viewStack.length === 1) return;
+
+      if (!id) {
+        if (popTopConsumedInCurrentTurn) {
+          return;
+        }
+        popTopConsumedInCurrentTurn = true;
+        queueMicrotask(() => {
+          popTopConsumedInCurrentTurn = false;
+        });
+      }
+
       setViewContextState((prevViewState) => {
         const newViewStack = id
           ? prevViewState.viewStack.filter((view) => view.id !== id)

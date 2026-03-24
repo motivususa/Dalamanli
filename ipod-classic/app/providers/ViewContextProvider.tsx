@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 import { SelectableListOption } from "@/components/SelectableList";
 import { SplitScreenPreview } from "@/components/previews";
@@ -125,6 +125,42 @@ const ViewContextProvider = ({ children }: Props) => {
     headerTitle: VIEW_REGISTRY.home.title,
     preview: SplitScreenPreview.Music,
   });
+
+  /** One MENU press must pop exactly once. Per-view `useMenuHideView` listeners all ran on the same
+   *  event and each called `hideView()`, scheduling two pops (e.g. Now Playing → Playlists). */
+  useEffect(() => {
+    const onMenuClick = () => {
+      setViewContextState((prev) => {
+        const stack = prev.viewStack;
+        if (stack.length < 2) return prev;
+
+        const top = stack[stack.length - 1];
+        if (top.type === "coverFlow") {
+          return prev;
+        }
+
+        const newViewStack = stack.slice(0, -1);
+        const newTopView = newViewStack[newViewStack.length - 1];
+
+        let headerTitle: string | undefined;
+        if (newTopView.type === "screen") {
+          const config = VIEW_REGISTRY[newTopView.id as ViewId];
+          headerTitle = newTopView.headerTitle ?? config?.title;
+        } else if ("headerTitle" in newTopView) {
+          headerTitle = newTopView.headerTitle;
+        }
+
+        return {
+          ...prev,
+          viewStack: newViewStack,
+          headerTitle,
+        };
+      });
+    };
+
+    window.addEventListener("menuclick", onMenuClick);
+    return () => window.removeEventListener("menuclick", onMenuClick);
+  }, []);
 
   return (
     <ViewContext.Provider value={[viewContextState, setViewContextState]}>
