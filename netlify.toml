@@ -1,6 +1,6 @@
 [build]
   base      = "winXP"
-  command   = "npm install --legacy-peer-deps && npm run build"
+  command   = "npm install --legacy-peer-deps && (cd ../ipod-classic && npm ci && npm run build && rm -rf ../winXP/public/ipod && mkdir -p ../winXP/public/ipod && cp -r out/* ../winXP/public/ipod/) && npm run build"
   publish   = "winXP/build"
   functions = "netlify/functions"
 

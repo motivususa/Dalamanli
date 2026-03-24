@@ -19,7 +19,7 @@
   "scripts": {
     "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
     "dev": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
-    "build:ipod": "cd ../ipod-classic && npm run build && cp -r out/* ../winXP/public/ipod/",
+    "build:ipod": "cd ../ipod-classic && npm run build && rm -rf ../winXP/public/ipod && mkdir -p ../winXP/public/ipod && cp -r out/* ../winXP/public/ipod/",
     "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
